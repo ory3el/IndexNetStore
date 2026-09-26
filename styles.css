@@ -1,9 +1,28 @@
 :root{
-  --bg:#000; --panel:#111111; --line:#2a2a2a; --muted:#9a9a9a; --fg:#fff;
-  --c1:#4d7dff; --c2:#3ad6d1; --c3:#a24dff; --c4:#ff4dcd; --c5:#ff4d4d;
+  --white: #fff;
+  --bg:#000;
+  --panel:#111111;
+  --line:#2a2a2a;
+  --muted:#9a9a9a;
+  --fg:#fff;
+  --c1:#4d7dff;
+  --c2:#3ad6d1;
+  --c3:#a24dff;
+  --c4:#ff4dcd;
+  --c5:#ff4d4d;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
+
+html[data-theme="dark"] {
+  --white: #000;
+}
+
+/* Smooth, non-flashy transition when switching themes */
+html.theme-transition, html.theme-transition *{
+  transition: background-color .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease !important;
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Manrope',system-ui,sans-serif;overflow-x:hidden}
