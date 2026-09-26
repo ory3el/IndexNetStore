@@ -50,14 +50,14 @@
 </defs></svg>
 
 <div class="mmenuOverlay open" id="mmenu" onclick="toggleMenu()">
-  <button class="icon-btn menuCloseBtn" onclick="toggleMenu()">
+  <button class="icon-btn menuCloseBtn" onclick="event.stopPropagation(); toggleMenu()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
   </button>
   <div class="mmenu">
-    <a href="#" onclick="toggleMenu()">Início</a>
-    <a href="#produtos" onclick="toggleMenu()">Produtos</a>
-    <a href="#produtos" onclick="toggleMenu()">Categorias</a>
-    <a href="#sobre" onclick="toggleMenu()">Sobre Nós</a>
+    <a href="#" onclick="event.stopPropagation(); toggleMenu()">Início</a>
+    <a href="#produtos" onclick="event.stopPropagation(); toggleMenu()">Produtos</a>
+    <a href="#produtos" onclick="event.stopPropagation(); toggleMenu()">Categorias</a>
+    <a href="#sobre" onclick="event.stopPropagation(); toggleMenu()">Sobre Nós</a>
   </div>
 </div>
 
