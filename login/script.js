@@ -2,7 +2,7 @@ const redirectTarget = new URLSearchParams(window.location.search).get('redirect
 
 // ── GOOGLE SIGN-IN ───────────────────────────────────────────
 
-const GOOGLE_CLIENT_ID = '394176278495-nrt3cm60njrv670sjue1idhatqfrjlea.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '920873776103-cob19kmeoj7m43q7uve98j5vmbgqais5.apps.googleusercontent.com';
 let googleCredentialPending = null;
 let googleAccountPending = null;
 let googleModalResolver = null;
