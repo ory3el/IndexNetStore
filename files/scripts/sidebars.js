@@ -519,9 +519,9 @@ function initHeaderAuthListener() {
   
   supabaseClient.auth.onAuthStateChange(async (event, session) => {
     if (session && session.user) {
-      loginBtn.classList.add('hidden');
-      bellBtn.classList.remove('hidden');
-      profileContainer.classList.remove('hidden');
+      if (loginBtn) loginBtn.classList.add('hidden');
+      if (bellBtn) bellBtn.classList.remove('hidden');
+      if (profileContainer) profileContainer.classList.remove('hidden');
 
       try {
         const { data: profileData, error: profileError } = await supabaseClient
