@@ -737,13 +737,33 @@ function forgotPassword({ email }) {
 const $ = (id) => document.getElementById(id);
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function showToast(msg) {
+/*function showToast(msg) {
   const t = $('toast');
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(showToast._t);
   showToast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}*/
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg, type='ok'){
+  const t  = document.getElementById('toast1');
+  const ic = document.getElementById('toastIco');
+  const tx = document.getElementById('toastMsg');
+  if(!t || !ic || !tx) return;
+  tx.textContent = msg;
+  ic.className = 'toast-ico ' + type;
+  ic.textContent = type === 'ok' ? '✓' : '!';
+  t.classList.add('on');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('on'), 10000);
 }
+
+function showToast(msg) {
+  toast(msg, type='ok');
+}
+
+// --------------------------------------------------
 
 function setFieldError(inputId, errId, message) {
   const input = $(inputId), err = $(errId);
