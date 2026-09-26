@@ -151,7 +151,15 @@ html.theme-transition, html.theme-transition *{
   transition: background-color .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease !important;
 }
 
-*{box-sizing:border-box;}
+.noscroll { overflow: hidden; scrollbar-gutter: stable; }
+body.nobodyscroll { overflow: hidden; }
+.hidden { display: none !important; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg3); }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+
+*{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
 html{scroll-behavior:smooth; scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);font-family:'Manrope',system-ui,sans-serif;overflow-x:hidden}
 img{max-width:100%}
