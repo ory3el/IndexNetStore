@@ -468,7 +468,6 @@ function injectPrefetch(url) {
 
 // EXECUTE DATABASE
 window.addEventListener('DOMContentLoaded', async () => {
-    await syncEcommeDisplaySettings();
     initTheme();
     initThemeToggle();
     setupModalSwipe();
