@@ -1,3 +1,19 @@
+function goToLogin() {
+  const atualPage = window.location.pathname + window.location.search;
+  window.location.href = '/login?redirect=' + encodeURIComponent(atualPage);
+}
+
+function injectPrefetch(url) {
+  if (!document.querySelector(`link[href="${url}"]`)) {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+}
+
+// ============================================================
+
 const products = [
   {id:1,name:"Lip Luster Lip Gloss",price:36.99,category:"Beleza",isNew:true,grad:"url(#g1)",description:"Gloss labial de longa duração com acabamento espelhado e fórmula não pegajosa."},
   {id:2,name:"Chinelo Nuvem Fashion Sport",price:49.75,category:"Calçados",isNew:false,grad:"url(#g2)",description:"Conforto tipo nuvem para o dia a dia, leve e antiderrapante."},
