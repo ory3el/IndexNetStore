@@ -1,4 +1,16 @@
-const redirectTarget = new URLSearchParams(window.location.search).get('redirect') || '/';
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectParam = urlParams.get('redirect');
+  
+  if (redirectParam) {
+    localStorage.setItem('ecomme_redirect_url', redirectParam);
+  }
+});
+
+// ── NAV ──
+function buttonLink(url) {
+  window.location.href = url;
+}
 
 // ── GOOGLE SIGN-IN ───────────────────────────────────────────
 
@@ -704,6 +716,187 @@ async function checkPausedAccount(user) {
     toast('Não foi possível verificar o status da sua conta.', 'err');
     return false;
   }
+}
+
+// ── LOCK VARIABLE ──
+let redirectionInProgress = false;
+
+// ── DEVICE REGISTER ──────────────────────
+function getDeviceInfo() {
+  const ua = navigator.userAgent;
+  let browser = "Desconhecido";
+  let os = "Desconhecido";
+
+  // Browser
+  if (/Edg\//i.test(ua)) {
+    browser = "Edge";
+  } else if (/OPR\//i.test(ua) || /Opera/i.test(ua)) {
+    browser = "Opera";
+  } else if (/Firefox\//i.test(ua)) {
+    browser = "Firefox";
+  } else if (/SamsungBrowser/i.test(ua)) {
+    browser = "Samsung Internet";
+  } else if (/Chrome\//i.test(ua)) {
+    browser = "Chrome";
+  } else if (/Safari\//i.test(ua) && !/Chrome|Chromium/i.test(ua)) {
+    browser = "Safari";
+  }
+
+  // OS
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    os = "iOS";
+  } else if (/Android/i.test(ua)) {
+    os = "Android";
+  } else if (/Windows/i.test(ua)) {
+    os = "Windows";
+  } else if (/Macintosh|Mac OS X/i.test(ua)) {
+    os = "macOS";
+  } else if (/Linux/i.test(ua)) {
+    os = "Linux";
+  }
+
+  return { browser, os };
+}
+
+async function registerNewSession(userId) {
+  if (!userId) return;
+
+  let localSessionId = localStorage.getItem('local_session_id');
+  if (localSessionId) {
+    const { data: existingSession, error } =
+      await supabaseClient
+        .from('user_sessions')
+        .select('id')
+        .eq('id', localSessionId)
+        .eq('user_id', userId)
+        .maybeSingle();
+    
+    if (!existingSession || error) {
+      localStorage.removeItem('local_session_id');
+      localSessionId = null;
+    }
+  }
+  const { browser, os } = getDeviceInfo();
+  let ip = "Desconhecido";
+  try {
+    const res = await fetch(
+      'https://api.ipify.org?format=json'
+    );
+    if (res.ok) {
+      const data = await res.json();
+      ip = data.ip || "Desconhecido";
+    }
+  } catch (e) {
+    console.warn(
+      "Não foi possível capturar o IP."
+    );
+  }
+  if (localSessionId) {
+    const { error } = await supabaseClient
+      .from('user_sessions')
+      .update({
+        browser,
+        os,
+        ip_address: ip,
+        last_seen_at: new Date().toISOString()
+      })
+      .eq('id', localSessionId)
+      .eq('user_id', userId);
+    
+    if (error) {
+      console.error(
+        'Erro ao atualizar sessão:',
+        error
+      );
+    }
+    return;
+  }
+  const { data, error } =
+    await supabaseClient
+      .from('user_sessions')
+      .insert([{
+        user_id: userId,
+        browser,
+        os,
+        ip_address: ip,
+        last_seen_at: new Date().toISOString()
+      }])
+      .select('id')
+      .single();
+  
+  if (error) {
+    console.error(
+      '🚨 ERRO AO SALVAR SESSÃO:',
+      error.message
+    );
+    return;
+  }
+  if (data?.id) {
+    localStorage.setItem(
+      'local_session_id',
+      data.id
+    );
+  }
+}
+
+// ── ACTIVE SESSION & URL CLEAR ────────────
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if (!session || redirectionInProgress) {
+      return;
+    }
+    redirectionInProgress = true;
+    try {
+      const canContinue = await checkPausedAccount(session.user);
+      if (!canContinue) {
+        redirectionInProgress = false;
+        return;
+      }
+      sessionStorage.removeItem('remote_logout_notice_shown');
+      await registerNewSession(session.user.id);
+      const finalDestination = getTargetUrl();
+      if (
+        window.location.search || window.location.hash
+      ) {
+        window.history.replaceState(
+          {},
+          document.title, window.location.pathname
+        );
+      }
+
+      localStorage.removeItem('ecomme_redirect_url');
+      if (
+        document.getElementById('formLogin')
+      ) {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            hideLoadingModal();
+          }, 180);
+        });
+        toast('Sessão ativa! Redirecionando... 🎉');
+        setTimeout(() => {
+          window.location.href = finalDestination;
+        }, 1200);
+      }
+    } catch (error) {
+      console.error('Erro após autenticação:', error);
+      redirectionInProgress = false;
+      toast('Não foi possível concluir o login.', 'err');
+    }
+  }
+);
+
+// ── REDIRECT FUNCTION ──
+function getTargetUrl() {
+  const storedRedirect = localStorage.getItem('ecomme_redirect_url');
+  if (storedRedirect) {
+    return storedRedirect;
+  }
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlRedirect = urlParams.get('redirect');
+  if (urlRedirect) {
+    return urlRedirect;
+  }
+  return '/';
 }
 
 /* ---------- API stubs (replace body with real fetch() calls) ---------- */
