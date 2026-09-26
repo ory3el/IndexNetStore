@@ -1,20 +1,6 @@
-function goToLogin() {
-  const atualPage = window.location.pathname + window.location.search;
-  window.location.href = '/login?redirect=' + encodeURIComponent(atualPage);
-}
-
-function injectPrefetch(url) {
-  if (!document.querySelector(`link[href="${url}"]`)) {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = url;
-    document.head.appendChild(link);
-  }
-}
-
 // ============================================================
 
-const products = [
+/*const products = [
   {id:1,name:"Lip Luster Lip Gloss",price:36.99,category:"Beleza",isNew:true,grad:"url(#g1)",description:"Gloss labial de longa duração com acabamento espelhado e fórmula não pegajosa."},
   {id:2,name:"Chinelo Nuvem Fashion Sport",price:49.75,category:"Calçados",isNew:false,grad:"url(#g2)",description:"Conforto tipo nuvem para o dia a dia, leve e antiderrapante."},
   {id:3,name:"Hand Grip Ajustável",price:59.75,category:"Fitness",isNew:true,grad:"url(#g3)",description:"Fortalecimento de mãos e antebraços com resistência ajustável de 10 a 40kg."},
@@ -23,7 +9,7 @@ const products = [
   {id:6,name:"Camisa Masculina Slim",price:91.25,category:"Vestuário",isNew:false,grad:"url(#g3)",description:"Corte slim, tecido leve e respirável para qualquer ocasião."},
 ];
 let cart = [];
-const fmt = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const fmt = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});*/
 
 function renderGrid(){
   document.getElementById('grid').innerHTML = products.map(p=>`
