@@ -301,6 +301,27 @@
 }
 function initEcommeUI() {*/
 
+/* ─── UTILS ─────────────────────────────────────────────────────────── */
+const fmt = p => p != null ? 'R$ ' + Number(p).toFixed(2).replace('.', ',') : '';
+const $ = id => document.getElementById(id);
+
+function starsHtml(r) {
+  let s = '';
+  const f = Math.floor(r);
+  for (let i = 0; i < f; i++) s += '★';
+  for (let i = f; i < 5; i++) s += '☆';
+  return s;
+}
+
+function fishYates(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ------------------------------------------------
 if (typeof systemPrefersDark === 'undefined') {
   function systemPrefersDark() {
