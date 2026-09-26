@@ -544,9 +544,9 @@ function initHeaderAuthListener() {
         console.error("Erro ao carregar o avatar do header:", err);
       }
     } else {
-      loginBtn.classList.remove('hidden');
-      profileContainer.classList.add('hidden');
-      bellBtn.classList.add('hidden');
+      if (loginBtn) loginBtn.classList.remove('hidden');
+      if (profileContainer) profileContainer.classList.add('hidden');
+      if (bellBtn) bellBtn.classList.add('hidden');
       if (headerAvatar) headerAvatar.src = "/images/icons/full/user.webp";
     }
   });
