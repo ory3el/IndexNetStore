@@ -289,5 +289,56 @@ footer a:hover{color:#fff}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* mobile menu */
-.mmenu{position:fixed;top:0;left:0;right:0;background: var(--white);border-bottom: 1px solid var(--border);z-index:50;padding:90px 24px 30px;border-radius: 0 0 36px 36px;transform:translateY(-100%);transition:transform .3s ease;display:flex;flex-direction:column;gap:22px;font-size:18px;font-weight:600}
-.mmenu.open{transform:translateY(0)}
+.mmenuOverlay{
+  position:fixed;
+  height: 100%;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  background: var(--sidebar-bg);
+  top:0;
+  left:0;
+  right:0;
+  opacity: 0;
+  pointer-events: none;
+  transition:opacity 0.3s ease;
+  z-index:50;
+}
+.mmenuOverlay.open{
+  opacity: 1;
+  pointer-events: auto;
+}
+.mmenuOverlay.open .mmenu{
+  transform: translateY(0);
+}
+
+.mmenu{transform: translateY(-100%);position:fixed;top:0;left:0;right:0;background: var(--white);border-bottom: 1px solid var(--border);z-index:50;padding: 90px 24px 30px;border-radius: 0 0 36px 36px;transition:transform .3s ease;display:flex;flex-direction:column;align-items: center;gap: 15px;font-size:18px;font-weight:600}
+.menuCloseBtn{
+  background: transparent;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  z-index: 75;
+  font-size: 20px;
+  height: 40px;
+  width: 40px;
+}
+.mmenu a{
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0 20px;
+  color: var(--text);
+  border-radius: 150px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  transition: transform 0.25s, background 0.1s, color 0.1s;
+}
+
+.mmenu a:hover{
+  transform: scale(1.02);
+  background: var(--green);
+  color: #fff;
+}
