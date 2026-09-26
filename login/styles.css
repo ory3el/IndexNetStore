@@ -484,3 +484,326 @@ footer a:hover{color:#fff}
   .auth-card{padding:28px 18px 24px}
   .auth-head h1{font-size:23px}
 }
+
+/* ── MODAL PAUSED ACCOUNT ───────────────────────────────────── */
+.paused-account-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+}
+
+.paused-account-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.paused-account-modal {
+  width: min(440px, 100%);
+  background: var(--white);
+  border: 1px solid rgba(37, 99, 235, .12);
+  border-radius: 28px;
+  padding: 30px;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, .20),
+    0 0 0 1px rgba(37, 99, 235, .05);
+
+  transform: translateY(18px) scale(.96);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+}
+
+.paused-account-overlay.active .paused-account-modal {
+  transform: translateY(0) scale(1);
+}
+
+.paused-account-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 20px;
+  background: rgba(37, 99, 235, .08);
+  color: var(--blue);
+  font-size: 29px;
+}
+
+.paused-account-modal h3 {
+  margin: 0 0 10px;
+  text-align: center;
+
+  font-family: 'Sora', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+  color: var(--text);
+}
+
+.paused-account-modal p {
+  margin: 0 auto 24px;
+  max-width: 350px;
+
+  text-align: center;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.paused-account-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.paused-account-btn {
+  min-height: 46px;
+  border: none;
+  border-radius: 100px;
+  padding: 0 18px;
+
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    box-shadow .2s ease,
+    opacity .2s ease;
+}
+
+.paused-account-btn:hover {
+  transform: translateY(-1px);
+}
+
+.paused-account-btn:active {
+  transform: translateY(0);
+}
+
+.paused-account-btn.primary {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(37,99,235,.22);
+}
+
+.paused-account-btn.primary:hover {
+  background: #1d4ed8;
+}
+
+.paused-account-btn.secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.paused-account-btn.secondary:hover {
+  background: var(--bg3);
+}
+
+.paused-account-btn.loading {
+  pointer-events: none;
+  opacity: .65;
+}
+
+@media (max-width: 500px) {
+  .paused-account-modal {
+    border-radius: 24px;
+    padding: 24px 20px;
+  }
+
+  .paused-account-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── GOOGLE ACCOUNT CONFIRM MODAL ───────────────────────── */
+.google-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, .30);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease;
+}
+.google-confirm-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.google-confirm-modal {
+  width: min(500px, 100%);
+  background: var(--white);
+  border: 1px solid rgba(37,99,235,.12);
+  border-radius: 30px;
+  padding: 28px;
+  box-shadow: 0 35px 90px rgba(15,23,42,.22), 0 0 0 1px rgba(37,99,235,.05);
+  transform: translateY(20px) scale(.96);
+  transition:
+    transform .30s cubic-bezier(.4,0,.2,1);
+}
+.google-confirm-overlay.active .google-confirm-modal {
+  transform: translateY(0) scale(1);
+}
+.google-confirm-head {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.google-confirm-avatar {
+  width: 74px;
+  height: 74px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg3);
+  border: 3px solid #fff;
+  box-shadow:
+    0 8px 28px rgba(37,99,235,.16);
+}
+.google-confirm-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.google-confirm-head h3 {
+  margin: 0 0 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text);
+}
+.google-confirm-head p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.google-confirm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+}
+.google-confirm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.google-confirm-field.full {
+  grid-column: 1 / -1;
+}
+.google-confirm-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.google-confirm-input {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border1);
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  transition: .2s;
+}
+.google-confirm-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.08);
+}
+.google-confirm-input[readonly] {
+  background: var(--bg);
+  color: var(--muted);
+  cursor: not-allowed;
+}
+.google-confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+.google-confirm-btn {
+  height: 45px;
+  border: none;
+  border-radius: 100px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.google-confirm-btn:hover {
+  transform: translateY(-1px);
+}
+.google-confirm-cancel {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.google-confirm-continue {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(37,99,235,.20);
+}
+.google-confirm-continue:hover {
+  background: #1d4ed8;
+}
+.google-confirm-btn.loading {
+  opacity: .6;
+  pointer-events: none;
+}
+.google-confirm-required {
+  color: #ef4444;
+}
+
+@media (max-width: 520px) {
+  .google-confirm-modal {
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+  .google-confirm-grid {
+    grid-template-columns: 1fr;
+  }
+  .google-confirm-field.full {
+    grid-column: auto;
+  }
+  .google-confirm-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.google-login-render {
+  width: 100%;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 15px;
+}
+.google-login-render > div,
+.google-login-render iframe {
+  max-width: 100%;
+}
