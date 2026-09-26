@@ -472,7 +472,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     initThemeToggle();
     setupModalSwipe();
     setupModalAutoPlay();
-    initEcommeTranslationObserver();
     const loginBtn = document.getElementById('authLoginBtn');
     const profileContainer = document.getElementById('headerProfileContainer');
     /*const productsLoaded = await loadProductsFromSupabase();
