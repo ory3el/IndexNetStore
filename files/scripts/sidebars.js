@@ -355,10 +355,10 @@ if (typeof systemPrefersDark === 'undefined') {
     opts = opts || {};
     if (!['light', 'dark', 'auto'].includes(pref)) pref = 'light';
     try {
-      localStorage.setItem('ecomme-theme', pref);
-      const raw = localStorage.getItem('ecomme_settings');
+      localStorage.setItem('site-theme', pref);
+      const raw = localStorage.getItem('site_settings');
       const settings = raw ? JSON.parse(raw) : {};
-      localStorage.setItem('ecomme_settings', JSON.stringify({...settings, theme: pref}));
+      localStorage.setItem('site_settings', JSON.stringify({...settings, theme: pref}));
     } catch (error) {
       console.warn('Não foi possível salvar o tema localmente:', error);
     }
@@ -1140,7 +1140,7 @@ function updateFav() {
 
   if ($('favCount') && $('favTotal')) {
     $('favCount').textContent = `(${count})`;
-    $('favTotal').textContent = window.ecommeFormatPrice(total);
+    $('favTotal').textContent = window.siteFormatPrice(total);
   }
 
   const el = $('favItems');
@@ -1178,7 +1178,7 @@ function updateFav() {
             ${item.name}
           </div>
           <div class="ci-price" data-no-translate>
-            ${window.ecommeFormatPrice(item.price)}
+            ${window.siteFormatPrice(item.price)}
           </div>
           <button
             class="btn-madd"
