@@ -234,7 +234,6 @@ header {
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   backdrop-filter: blur(18px) saturate(170%);
   border: 1px solid var(--border2);
-  box-shadow: 0 2px 12px rgba(0,0,0,.06), inset 0 1px rgba(255,255,255,.2);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -874,8 +873,8 @@ header {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 1px solid rgba(25,100,255,1);
-  box-shadow: 0 0 20px rgb(25 100 255 / 50%);
+  border: 1px solid rgba(25,190,80,1);
+  box-shadow: 0 0 20px rgb(25 190 80 / 50%);
   overflow: hidden;
   /* background: #000; */
   display: flex;
@@ -897,8 +896,8 @@ header {
   background: transparent; color: var(--text);
   font-size: 14px; font-weight: 500; transition: background 0.2s, transform 0.2s;
 }
-.btn-acc-option i { font-size: 16px; color: var(--blue); width: 20px; text-align: center; }
-.btn-acc-option:hover { background: var(--blue-dim); color: var(--blue); transform: translateX(5px); }
+.btn-acc-option i {font-size: 16px;color: var(--black);width: 20px;text-align: center;}
+.btn-acc-option:hover {background: rgba(25,190,80,0.1);color: var(--green);transform: translateX(5px);}
 
 .acc-ft {margin-top: auto;padding-top: 10px;}
 .btn-logout-sb {
@@ -929,7 +928,7 @@ header {
   background: rgba(0, 0, 0, 0.5);
   /*backdrop-filter: blur(12px);*/
   backdrop-filter: none;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 10000;
