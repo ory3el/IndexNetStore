@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações | TheBay</title>
+
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="icon" id="favicon" type="image/png" href="/images/favicon.png">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('site-theme') || 'auto';
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var effective = saved === 'auto' ? (systemDark ? 'dark' : 'light') : saved;
+      document.documentElement.setAttribute('data-theme', effective);
+      document.documentElement.setAttribute('data-theme-pref', saved);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+  
+</head>
+<body>
+
+<!--
+<div class="toast-stack" id="toast">
+  <div class="t" id="t1"><div class="t-ico ok" id="tIco">✓</div><span id="toastMsg">OK</span></div>
+</div>
+-->
+  
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+  <span id="toastMsg"></span>
+</div>
+  
+<!-- ── HEADER ───────────────────────────────────────────────── -->
+<header class="site-header">
+  <button class="sidebarOpen" onclick="openMenu()">
+    <div class="sidebar-btn"> > </div>
+  </button>
+  
+  <div class="hdr-in">
+    <a href="/"><div class="logo">
+      <img src="/images/logo.png" style="width: 150px; height: auto; display: block;" alt="site"/>
+      </div>
+    </a>
+    <div class="hdr-bc">
+      <a href="/">Início</a>
+      <span>›</span>
+      <span style="cursor: default" id="bcSection">Configurações</span>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-ico" style="cursor: pointer;" onclick="showPanel('notifications')" title="Notificações">
+        <i class="fa-solid fa-bell"></i>
+      </div>
+      <div class="hdr-ico" style="cursor: pointer;" onclick="showPanel('cart')" title="Carrinho">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <!--<span class="hd-badge" id="cartBadge">0</span>-->
+      </div>
+      <div class="hdr-av" onclick="showPanel('profile')" title="Perfil">
+        <img src="/images/icons/full/user.webp" id="headerAvatar" style="width: 75%; height: auto; display: block" alt="User"/>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <!-- user card -->
+    <div class="user-card">
+      <div class="user-av-wrap level-ring">
+        <svg width="88" height="88" style="position:absolute;top:-8px;left:-8px;transform:rotate(-90deg)">
+          <circle class="ring-bg" cx="44" cy="44" r="40"/>
+          <circle class="ring-fg" cx="44" cy="44" r="40"/>
+        </svg>
+        <div class="user-av" onclick="showPanel('profile')" title="Editar perfil">
+          <img src="/images/icons/full/user.webp" id="sidebarAvatar" style="width: 75%; height: auto; display: block" alt="User"/>
+        </div>
+        <div class="av-edit" onclick="showPanel('profile')">✏️</div>
+      </div>
+      <div class="perfilNome" id="sidebarName"></div>
+      <div class="user-email" id="sidebarEmail"></div>
+      <!-- <div class="user-badge">⭐ Cliente Gold</div> -->
+      <div class="user-stats">
+        <div class="ustat"><strong id="profileOrdersCount">0</strong><small>Pedidos</small></div>
+        <div class="ustat"><strong id="profileWishCount">0</strong><small>Desejos</small></div>
+        <div class="ustat"><strong id="profileFollowing">0</strong><small>Seguindo</small></div>
+      </div>
+    </div>
+
+    <!-- navigation -->
+    <nav class="sb-nav">
+      <div class="sb-section">
+        <div class="sb-sec-label">Conta</div>
+        <button class="nav-item" data-panel="profile" onclick="showPanel('profile',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-user"></i>
+          </span><span class="nav-lbl">Meu Perfil</span><span class="nav-arrow">›</span>
+        </button>
+        <!-- <button class="nav-item" data-panel="orders" onclick="showPanel('orders',this)">
+          <span class="nav-ico">
+            <img src="/images/icons/full/box.webp" style="width: 20px; height: auto; display: block;" alt="Box"/>
+          </span><span class="nav-lbl">Minhas Compras</span>
+          <span class="nav-badge">0</span>
+        </button> -->
+        <button class="nav-item" data-panel="wishlist" onclick="showPanel('wishlist',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-heart"></i>
+          </span><span class="nav-lbl">Lista de Desejos</span>
+          <span class="nav-badge" style="display: none" id="sWishlistBadge">0</span>
+        </button>
+        <button class="nav-item" data-panel="cart" onclick="showPanel('cart',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-cart-shopping"></i>
+          </span><span class="nav-lbl">Meu Carrinho</span>
+          <span class="nav-badge" style="display: none" id="sCartBadge">0</span>
+        </button>
+        <button class="nav-item" data-panel="coupons" onclick="showPanel('coupons',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-ticket"></i>
+          </span><span class="nav-lbl">Meus Cupons</span>
+          <span class="nav-badge" style="display: none" id="sCouponsBadge">0</span>
+        </button>
+        <button class="nav-item" data-panel="reviews" onclick="showPanel('reviews',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-star"></i>
+          </span><span class="nav-lbl">Minhas Avaliações</span><span class="nav-arrow">›</span>
+        </button>
+      </div>
+      <div class="sb-section">
+        <div class="sb-sec-label">Configurações</div>
+        <button class="nav-item" data-panel="addresses" onclick="showPanel('addresses',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-location-dot"></i>
+          </span><span class="nav-lbl">Endereços</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-item" data-panel="payments" onclick="showPanel('payments',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-credit-card"></i>
+          </span><span class="nav-lbl">Pagamentos</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-item" data-panel="notifications" onclick="showPanel('notifications',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-bell"></i>
+          </span><span class="nav-lbl">Notificações</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-item" data-panel="security" onclick="showPanel('security',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-lock"></i>
+          </span><span class="nav-lbl">Segurança</span><span class="nav-arrow">›</span>
+        </button>
+        <button class="nav-item active" data-panel="settings" onclick="showPanel('settings',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-gear"></i>
+          </span><span class="nav-lbl">Configurações</span><span class="nav-arrow">›</span>
+        </button>
+      </div>
+      <div class="sb-section">
+        <button class="nav-item danger" onclick="openConfirmLogout()//showPanel('logout',this)">
+          <span class="nav-ico">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </span><span class="nav-lbl">Sair da Conta</span>
+        </button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- ════ PERFIL ════ -->
+    <div class="panel" id="panel-profile">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Meu Perfil</h2><p>Gerencie suas informações pessoais</p></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-ghost" onclick="toast('Visualizando como cliente','info')">
+              <i class="fa-solid fa-eye"></i>
+              Visualizar
+            </button>
+          </div>
+        </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-image"></i>
+        </span> Foto de Perfil</div>
+      <div class="av-upload" onclick="toast('Selecionar imagem...','info'); document.getElementById('avatarInput').click()">
+        <div class="av-big" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="/images/icons/full/user.webp" id="profileAvatar" style="width: 75%; height: auto; display: block" alt="User"/>
+        </div>
+      <div class="av-upload-txt">
+        <h4>Alterar foto de perfil</h4>
+        <p>JPEG, PNG, WebP ou HEIC · Máximo 5MB <br>Recomendado 500×500px</p>
+        <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/webp, image/heic" style="display: none;" onchange="openCropModal(event)">
+      
+        <div class="av-btns">
+          <button class="btn-xs blue"><span style="font-weight: bold;">+&nbsp;</span>&nbsp;Escolher arquivo</button>
+          <button class="btn-xs gray red" onclick="removePhoto(event)"><span style="font-weight: bold;">-&nbsp;</span>&nbsp;Remover Foto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="ct-ico">
+        <i class="fa-solid fa-user"></i>
+        </span> Informações Pessoais</div>
+        <div class="fgrid">
+          <div class="fgrp"><label>Nome</label><input type="text" id="profileFirstName" class="finput" placeholder="Seu nome"></div>
+          <div class="fgrp"><label>Sobrenome</label><input type="text" id="profileLastName" class="finput" placeholder="Sobrenome"></div>
+          <div class="fgrp"><label>E-mail</label><input type="email" id="profileEmail" class="finput-d" placeholder="seu@email.com" disabled></div>
+          <div class="fgrp"><label>Celular</label><input type="text" id="profilePhone" class="finput" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhone(this)"></div>
+          <div class="fgrp"><label>CPF</label><input type="text" id="profileCPF" class="finput" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)"></div>
+          <div class="fgrp"><label>Data de nascimento</label><input type="date" id="profileBirth" class="finput" style="cursor: pointer;"></div>
+          <div class="fgrp"><label>Gênero</label>
+            <select id="profileGender" class="fselect">
+              <option disabled>Selecione uma opção</option><option>Feminino</option><option>Masculino</option><option>Prefiro não informar</option>
+            </select>
+          </div>
+          <div class="fgrp"><label>Idioma</label>
+            <select id="profileLang" class="fselect">
+              <option>Português (BR)</option><option>English</option><option>Español</option>
+            </select>
+          </div>
+          <div class="fgrp span2"><label>Bio / Sobre mim</label><textarea id="profileBio" class="finput" rows="3" placeholder="Conte um pouco sobre você..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="saveProfile()">Salvar alterações</button>
+          <button class="btn-ghost" onclick="toast('Alterações descartadas')"><span style="font-weight: bold;">✕&nbsp;</span>&nbsp;Cancelar</button>
+        </div>
+  </div>
+
+      <div class="card" style="margin-top: 10px;">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-chart-simple"></i>
+        </span> Nível de Completude do Perfil</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+          <div style="flex:1;background:#e2e8f0;border-radius:100px;height:8px;overflow:hidden">
+            <div style="width:33.33%;height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:100px;transition:.6s"></div>
+          </div>
+          <span style="font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:#2563eb;flex-shrink:0">33,33%</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#16a34a">✓ Nome e sobrenome</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#16a34a">✓ E-mail verificado</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#f97316">○ Celular confirmado</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#f97316">○ Endereço principal</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#f97316">○ Foto de perfil</div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:#f97316">○ Bio preenchida</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PEDIDOS ════ -->
+    <div class="panel" id="panel-orders">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Meus Pedidos</h2><p>Acompanhe e gerencie seus pedidos</p></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-outline" onclick="buttonLink('/track-order')">🔍 Rastrear Pedidos</button>
+        </div>
+      </div>
+      <!-- filters -->
+      <div class="card" style="padding:14px 20px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-xs blue" onclick="filterOrders(this,'all')">Todos (12)</button>
+          <button class="btn-xs gray" onclick="filterOrders(this,'transit')">Em trânsito (1)</button>
+          <button class="btn-xs gray" onclick="filterOrders(this,'processing')">Em preparo (1)</button>
+          <button class="btn-xs gray" onclick="filterOrders(this,'delivered')">Entregues (9)</button>
+          <button class="btn-xs gray" onclick="filterOrders(this,'cancelled')">Cancelados (1)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="order-card">
+          <div class="order-hd">
+            <div><div class="order-id">DS-2025-0042</div><div class="order-date">12 Jan 2025</div></div>
+            <span class="order-status os-transit">🚚 Em Trânsito</span>
+          </div>
+          <div class="order-track">
+            <div class="track-step done"><div class="ts-dot">
+              <img src="/images/icons/full/check.webp" style="width: 20px; height: auto; display: block;" alt="Check Mark"/>
+            </div><div class="ts-lbl">Confirmado</div></div>
+            <div class="track-step done"><div class="ts-dot">
+              <img src="/images/icons/full/check.webp" style="width: 20px; height: auto; display: block;" alt="Check Mark"/>
+            </div><div class="ts-lbl">Preparando</div></div>
+            <div class="track-step curr"><div class="ts-dot">
+              <img src="/images/icons/full/box.webp" style="width: 20px; height: auto; display: block;" alt="Box"/>
+            </div><div class="ts-lbl">Trânsito</div></div>
+            <div class="track-step"><div class="ts-dot">🚚</div><div class="ts-lbl">Saiu p/ entrega</div></div>
+            <div class="track-step"><div class="ts-dot">🏠</div><div class="ts-lbl">Entregue</div></div>
+          </div>
+          <div class="order-items"><div class="order-item-thumb">⌚</div><div class="order-item-thumb">🎧</div></div>
+          <div class="order-ft">
+            <div><div class="order-total">R$ 309,80</div><div class="order-items-count">2 itens · Frete grátis</div></div>
+            <div class="order-btns">
+              <button class="btn-xs blue" onclick="toast('Abrindo rastreamento...','info')">📍 Rastrear</button>
+              <button class="btn-xs gray" onclick="toast('Detalhes do pedido')">Ver detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card">
+          <div class="order-hd">
+            <div><div class="order-id">DS-2025-0038</div><div class="order-date">05 Jan 2025</div></div>
+            <span class="order-status os-processing">⏳ Em Preparação</span>
+          </div>
+          <div class="order-items"><div class="order-item-thumb">💡</div></div>
+          <div class="order-ft">
+            <div><div class="order-total">R$ 79,90</div><div class="order-items-count">1 item</div></div>
+            <div class="order-btns">
+              <button class="btn-xs gray" onclick="toast('Cancelamento solicitado','info')">✕ Cancelar</button>
+              <button class="btn-xs gray" onclick="toast('Detalhes do pedido')">Ver detalhes</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card">
+          <div class="order-hd">
+            <div><div class="order-id">DS-2024-0195</div><div class="order-date">18 Dez 2024</div></div>
+            <span class="order-status os-delivered">✅ Entregue</span>
+          </div>
+          <div class="order-items"><div class="order-item-thumb">👟</div><div class="order-item-thumb">🎒</div><div class="order-item-thumb">✨</div></div>
+          <div class="order-ft">
+            <div><div class="order-total">R$ 459,70</div><div class="order-items-count">3 itens · Frete grátis</div></div>
+            <div class="order-btns">
+              <button class="btn-xs blue" onclick="toast('Abrindo solicitação...','info')">↩ Devolver</button>
+              <button class="btn-xs gray" onclick="toast('Avaliando pedido')">⭐ Avaliar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-card">
+          <div class="order-hd">
+            <div><div class="order-id">DS-2024-0181</div><div class="order-date">02 Dez 2024</div></div>
+            <span class="order-status os-cancelled">✕ Cancelado</span>
+          </div>
+          <div class="order-items"><div class="order-item-thumb">📷</div></div>
+          <div class="order-ft">
+            <div><div class="order-total">R$ 149,90</div><div class="order-items-count">Reembolso processado</div></div>
+            <div class="order-btns">
+              <button class="btn-xs blue" onclick="toast('Recomprar itens','info')">🔁 Recomprar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ WISHLIST ════ -->
+    <div class="panel" id="panel-wishlist">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Lista de Desejos</h2><p id="wishlistCount">0 produtos salvos</p></div>
+        <button class="btn-primary" id="wishTopButton" onclick="toast('Adicionando tudo ao carrinho! 🛒')">
+          <i class="fa-solid fa-cart-shopping"></i>
+          Adicionar tudo ao carrinho
+        </button>
+      </div>
+      <div class="card">
+        <div class="wish-grid" id="wishlistGrid"></div>
+      </div>
+    </div>
+
+    <!-- ════ CART ════ -->
+    <div class="panel" id="panel-cart">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Meu Carrinho</h2><p id="cartCount">0 produtos salvos</p></div>
+        <button class="btn-primary" id="cartTopButton" onclick="buttonLink('/checkout')">
+          <i class="fa-solid fa-credit-card"></i>
+          Finalizar Compra
+        </button>
+      </div>
+      <div class="card">
+        <div class="wish-grid" id="cartGrid"></div>
+      </div>
+    </div>
+    
+    <!-- ════ CUPONS ════ -->
+    <div class="panel" id="panel-coupons">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Meus Cupons</h2><p>Descontos disponíveis para você</p></div>
+        <button class="btn-outline" onclick="toast('Digite o código no carrinho 🎟️','info')">
+          <i class="fa-solid fa-plus"></i>
+          Adicionar cupom
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-check"></i>
+        </span> Cupons Ativos</div>
+        <div class="coupon-card">
+          <div class="coupon-pct">10%</div>
+          <div class="coupon-info">
+            <h4>Desconto de Boas-vindas</h4>
+            <p>Válido para qualquer produto da loja</p>
+            <div class="coupon-exp">
+              <i class="fa-solid fa-alarm-clock"></i>
+              Expira em 31/01/2025</div>
+          </div>
+          <div class="coupon-code" onclick="copyCoupon('SAVE10')">SAVE10</div>
+        </div>
+        <div class="coupon-card">
+          <div class="coupon-pct">20%</div>
+          <div class="coupon-info">
+            <h4>Desconto Eletrônicos</h4>
+            <p>Exclusivo para a categoria eletrônicos</p>
+            <div class="coupon-exp">
+              <i class="fa-solid fa-alarm-clock"></i>
+              Expira em 15/02/2025</div>
+          </div>
+          <div class="coupon-code" onclick="copyCoupon('SAVE20')">SAVE20</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-hourglass-end"></i>
+        </span> Cupons Expirados</div>
+        <div style="opacity:.5">
+          <div class="coupon-card" style="background:#f8fafd;border-color:#e2e8f0">
+            <div class="coupon-pct" style="color:#94a3b8">15%</div>
+            <div class="coupon-info"><h4>Cupom Black Friday</h4><p>Expirado em 30/11/2024</p></div>
+            <div class="coupon-code" style="background:#f1f5f9;border-color:#e2e8f0;color:#94a3b8;pointer-events:none">BLUE15</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ AVALIAÇÕES ════ -->
+    <div class="panel" id="panel-reviews">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Minhas Avaliações</h2><p>Produtos que você avaliou</p></div>
+      </div>
+      <div class="card">
+        <div class="rev-card">
+          <div class="rev-hd"><div class="rev-prod-ico">⌚</div><div><div class="rev-prod-name">Smartwatch Pro X7</div><div class="rev-prod-cat">Eletrônicos · Pedido DS-2024-0195</div></div><div style="margin-left:auto"><button class="btn-xs blue" onclick="toast('Editando avaliação','info')">
+            <i class="fa-solid fa-pencil"></i>
+            Editar
+          </button></div></div>
+          <div class="rev-stars">★★★★★</div>
+          <div class="rev-text">"Melhor smartwatch que já tive! Chegou em 8 dias, embalagem impecável e a qualidade está acima do esperado. A bateria realmente dura 14 dias como anunciado. Recomendo muito!"</div>
+          <div class="rev-meta"><span>20 Jan 2025</span><div style="display:flex;align-items:center;gap:6px"><span>
+            <i class="fa-regular fa-thumbs-up"></i>
+            42 pessoas acharam útil
+          </span><button class="rev-helpful" onclick="toast('Obrigada pelo voto!')">
+            <i class="fa-regular fa-thumbs-up"></i>
+            Útil
+          </button></div></div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-hd"><div class="rev-prod-ico">🎒</div><div><div class="rev-prod-name">Mochila Anti-Furto Executiva</div><div class="rev-prod-cat">Moda · Pedido DS-2024-0195</div></div><div style="margin-left:auto"><button class="btn-xs blue" onclick="toast('Editando avaliação','info')">
+            <i class="fa-solid fa-pencil"></i>
+            Editar
+          </button></div></div>
+          <div class="rev-stars">★★★★☆</div>
+          <div class="rev-text">"Ótima mochila, muito espaçosa e o compartimento USB é muito prático. Tirei uma estrela porque o zíper poderia ser mais resistente. De resto, excelente custo-benefício."</div>
+          <div class="rev-meta"><span>19 Jan 2025</span><div style="display:flex;align-items:center;gap:6px"><span>
+            <i class="fa-regular fa-thumbs-up"></i>
+            18 pessoas acharam útil
+          </span><button class="rev-helpful" onclick="toast('Obrigada pelo voto!')">
+            <i class="fa-regular fa-thumbs-up"></i>
+            Útil
+          </button></div></div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-hd"><div class="rev-prod-ico">👟</div><div><div class="rev-prod-name">Tênis Running UltraLight</div><div class="rev-prod-cat">Moda · Pedido DS-2024-0195</div></div><div style="margin-left:auto"><button class="btn-xs blue" onclick="toast('Editando avaliação','info')">
+            <i class="fa-solid fa-pencil"></i>
+            Editar
+          </button></div></div>
+          <div class="rev-stars">★★★★★</div>
+          <div class="rev-text">"Levíssimo e muito confortável! Uso para corrida de 5km diariamente. O amortecimento é excelente. Numeração precisa, peça o seu tamanho normal."</div>
+          <div class="rev-meta"><span>15 Jan 2025</span><div style="display:flex;align-items:center;gap:6px"><span>
+            <i class="fa-regular fa-thumbs-up"></i>
+            31 pessoas acharam útil
+          </span><button class="rev-helpful" onclick="toast('Obrigada pelo voto!')">
+            <i class="fa-regular fa-thumbs-up"></i>
+            Útil
+          </button></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-hourglass-half"></i>
+        </span> Aguardando sua Avaliação</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:#f8fafd;border:1.5px solid #e2e8f0;border-radius:12px">
+          <div class="card-waiting" style="display:flex;align-items:center;gap:12px"><div style="font-size:28px">💡</div><div><div style="font-size:13px;font-weight:600">Kit LED Smart RGB 10m</div><div style="font-size:11px;color:#64748b">Entregue em 10 Jan 2025</div></div></div>
+          <button class="btn-primary" style="font-size:12px" onclick="toast('Abrindo formulário de avaliação ⭐','info')">
+            <i class="fa-solid fa-star"></i>
+            Avaliar agora
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ════ ENDEREÇOS ════ -->
+    <div class="panel" id="panel-addresses">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Endereços</h2><p>Gerencie seus endereços de entrega</p></div>
+        <button class="btn-primary" onclick="openAddressModal()">
+          <i class="fa-solid fa-plus"></i>
+          Novo endereço
+        </button>
+      </div>
+      <div class="card">
+        <div class="addr-grid">
+          <div class="addr-card default">
+            <div class="addr-default-badge"></div>
+            <div class="addr-type"></div>
+            <div class="addr-name"></div>
+            <div class="addr-street"><br><br></div>
+            <div class="addr-actions">
+              <button class="btn-xs blue" onclick="toast('Editando endereço','info')">
+                <i class="fa-solid fa-pencil"></i>
+              </button>
+              <button class="btn-xs gray" onclick="toast('Endereço excluído')">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+          <div class="add-card" onclick="openAddressModal()">
+            <div class="add-card-ico">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+            <span>Adicionar novo endereço</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ PAGAMENTOS ════ -->
+    <div class="panel" id="panel-payments">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Métodos de Pagamento</h2><p>Seus cartões e formas de pagamento salvas</p></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-credit-card"></i>
+        </span> Cartões Salvos</div>
+        <div class="pay-card">
+          <div class="pay-ico visa">VISA</div>
+          <div class="pay-info"><div class="pay-name">Visa terminado em 4231 <span class="pay-default">Principal</span></div><div class="pay-detail">Ana Carolina · Expira 08/2027</div></div>
+          <div class="pay-actions">
+            <button class="btn-xs blue" onclick="toast('Editando cartão','info')">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="btn-xs gray" onclick="toast('Cartão excluído')">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+        <div class="pay-card">
+          <div class="pay-ico master">MC</div>
+          <div class="pay-info"><div class="pay-name">Mastercard terminado em 8817</div><div class="pay-detail">Ana Carolina · Expira 12/2026</div></div>
+          <div class="pay-actions">
+            <button class="btn-xs blue" onclick="toast('Definido como principal ✓')">
+              <i class="fa-solid fa-star"></i>
+            </button>
+            <button class="btn-xs gray" onclick="toast('Cartão excluído')">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn-outline" style="margin-top:10px; font-size: 12px" onclick="toast('Adicionando cartão','info')">
+          <i class="fa-solid fa-plus"></i>
+          Novo cartão
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-brands fa-pix"></i>
+        </span> Chave PIX</div>
+        <div class="pay-card">
+          <div class="pay-ico pix">PIX</div>
+          <div class="pay-info"><div class="pay-name">Chave PIX — CPF</div><div class="pay-detail">123.456.789-00 · Banco do Brasil</div></div>
+          <div class="pay-actions">
+            <button class="btn-xs gray" onclick="toast('Chave copiada!')">
+              <i class="fa-solid fa-clipboard"></i>
+              Copiar
+            </button>
+            <button class="btn-xs gray" onclick="toast('Chave excluída')">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+        <button class="btn-outline" style="margin-top:10px; font-size: 12px" onclick="toast('Cadastrar nova chave PIX','info')">
+          <i class="fa-solid fa-plus"></i>
+          Adicionar chave PIX
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </span> Histórico de Pagamentos</div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:13px">
+            <div><div style="font-weight:600">DS-2025-0042 — Smartwatch + Fone</div><div style="font-size:11px;color:#94a3b8">12 Jan 2025 · Visa ••4231</div></div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;color:#16a34a">R$ 309,80</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:13px">
+            <div><div style="font-weight:600">DS-2024-0195 — 3 itens</div><div style="font-size:11px;color:#94a3b8">18 Dez 2024 · Mastercard ••8817</div></div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;color:#16a34a">R$ 459,70</div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:13px">
+            <div><div style="font-weight:600">DS-2024-0181 — Câmera (cancelado)</div><div style="font-size:11px;color:#94a3b8">02 Dez 2024 · Reembolsado via PIX</div></div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;color:#94a3b8">- R$ 149,90</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ NOTIFICAÇÕES ════ -->
+    <div class="panel" id="panel-notifications">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Notificações</h2><p>Escolha como e quando deseja ser notificado</p></div>
+        <button class="btn-outline" onclick="setAllNotifs()">
+          <i class="fa-solid fa-check"></i>
+          Ativar todas
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-box-open"></i>
+        </span> Pedidos e Entregas</div>
+        <div class="notif-list">
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-box-open"></i>
+          </div><div class="notif-info"><h4>Atualização de pedido</h4><p>Notificações de status, envio e entrega</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-truck"></i>
+          </div><div class="notif-info"><h4>Saiu para entrega</h4><p>Avise quando o pedido estiver a caminho</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-check"></i>
+          </div><div class="notif-info"><h4>Pedido entregue</h4><p>Confirmação de entrega bem-sucedida</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-reply"></i>
+          </div><div class="notif-info"><h4>Status de devolução</h4><p>Atualizações sobre solicitações de troca/devolução</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp"><div class="toggle-lbl"></div></label></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-tag"></i>
+        </span> Promoções e Ofertas</div>
+        <div class="notif-list">
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-bolt"></i>
+          </div><div class="notif-info"><h4>Ofertas relâmpago</h4><p>Flash sales e descontos por tempo limitado</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-ticket"></i>
+          </div><div class="notif-info"><h4>Cupons exclusivos</h4><p>Novos cupons e promoções personalizadas</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-envelope"></i>
+          </div><div class="notif-info"><h4>Novidades semanais</h4><p>Tendências e novidades por e-mail</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp"><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-heart"></i>
+          </div><div class="notif-info"><h4>Itens favoritos em promoção</h4><p>Alerte quando um produto salvo entrar em oferta</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-bell"></i>
+        </span> Canal de Notificações</div>
+        <div class="notif-list">
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-envelope"></i>
+          </div><div class="notif-info"><h4>E-mail</h4><p>seu.email@email.com</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-comment"></i>
+          </div><div class="notif-info"><h4>SMS / WhatsApp</h4><p></p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp" checked><div class="toggle-lbl"></div></label></div>
+          <div class="notif-row"><div class="notif-left"><div class="notif-ico">
+            <i class="fa-solid fa-bell"></i>
+          </div><div class="notif-info"><h4>Push no navegador</h4><p>Notificações em tempo real</p></div></div><label class="toggle-wrap"><input type="checkbox" class="toggle-inp"><div class="toggle-lbl"></div></label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SEGURANÇA ════ -->
+    <div class="panel" id="panel-security">
+      <div class="panel-hd">
+        <div class="panel-hd-left"><h2>Segurança</h2><p>Proteja sua conta com as melhores práticas</p></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-shield"></i>
+        </span> Status de Segurança</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#dcfce7,#d1fae5);border-radius:12px;border:1px solid #86efac;margin-bottom:18px">
+          <span style="font-size:28px">
+            <i class="fa-solid fa-lock"></i>
+          </span>
+          <div><div style="font-size:13px;font-weight:700;color:#15803d">Conta Segura</div><div style="font-size:11px;color:#166534">Sua conta está protegida com senha forte e e-mail verificado</div></div>
+          <div class="account-status" style="margin-left:auto;background:#16a34a;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px">Nível: Alto</div>
+        </div>
+        <div class="notif-list">
+          <div class="security-item"><div class="sec-left"><div class="sec-ico blue">
+            <i class="fa-solid fa-key"></i>
+          </div><div class="sec-info"><h4>Senha da conta</h4><p>Última atualização há 30 dias</p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="sec-status sec-on">● Configurada</span><button class="btn-xs blue" onclick="changePwd()">Alterar</button></div></div>
+          <div class="security-item"><div class="sec-left"><div class="sec-ico green">
+            <i class="fa-solid fa-envelope"></i>
+          </div><div class="sec-info"><h4>E-mail verificado</h4><p id="securityEmail"></p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="sec-status sec-on">● Verificado</span></div></div>
+          <div class="security-item"><div class="sec-left"><div class="sec-ico green">
+            <i class="fa-solid fa-phone"></i>
+          </div><div class="sec-info"><h4>Celular verificado</h4><p></p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="sec-status sec-on">● Verificado</span></div></div>
+          <div class="security-item"><div class="sec-left"><div class="sec-ico yellow">
+            <i class="fa-solid fa-lock"></i>
+          </div><div class="sec-info"><h4>Autenticação em 2 fatores (2FA)</h4><p>Proteção extra ao fazer login</p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="sec-status sec-off">○ Inativo</span><button class="btn-xs blue" onclick="toast('Configurando 2FA...','info')">Ativar</button></div></div>
+          <div class="security-item"><div class="sec-left"><div class="sec-ico blue">
+            <i class="fa-solid fa-globe"></i>
+          </div><div class="sec-info"><h4>Contas vinculadas</h4>
+            <p>Google</p></div></div><div style="display:flex;align-items:center;gap:8px"><span class="sec-status sec-on">● 1 conta</span><button class="btn-xs gray" onclick="toast('Gerenciando vínculos','info')">Gerenciar</button></div></div>
+        </div>
+      </div>
+
+      <!-- change password inline -->
+      <div class="card" id="pwdChangeCard" style="display:none">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-key"></i>
+        </span> Alterar Senha</div>
+        <div class="fgrid" style="grid-template-columns:1fr">
+          <div class="fgrp"><label>Senha atual</label><input class="finput" type="password" placeholder="••••••••"></div>
+          <div class="fgrp"><label>Nova senha</label><input class="finput" type="password" placeholder="Mínimo 8 caracteres"></div>
+          <div class="fgrp"><label>Confirmar nova senha</label><input class="finput" type="password" placeholder="Repita a nova senha"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-primary" onclick="toast('Senha alterada com sucesso! 🔑');document.getElementById('pwdChangeCard').style.display='none'">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Salvar nova senha
+          </button>
+          <button class="btn-ghost" onclick="document.getElementById('pwdChangeCard').style.display='none'">Cancelar</button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title"><span class="ct-ico">
+          <i class="fa-solid fa-desktop"></i>
+        </span> Sessões Ativas</div>
+        <div id="sessionsList" style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-size: 13px; color: #64748b;">Carregando sessões...</div>
+          <!--<div class="session-card"><div class="session-device">💻</div><div class="session-info"><strong>Chrome · Windows 11</strong><small>São Paulo, SP · Agora mesmo · IP 177.X.X.X</small></div><span class="session-curr">Sessão atual</span></div>-->
+          <!--<div class="session-card"><div class="session-device">📱</div><div class="session-info"><strong>Safari · iPhone 15</strong><small>São Paulo, SP · Há 2 horas · IP 177.X.X.X</small></div><button class="btn-xs gray" onclick="toast('Sessão encerrada')">Encerrar</button></div>-->
+          <!--<div class="session-card"><div class="session-device">🖥️</div><div class="session-info"><strong>Firefox · macOS</strong><small>Rio de Janeiro, RJ · Ontem às 15:32</small></div><button class="btn-xs gray" onclick="toast('Sessão encerrada')">Encerrar</button></div>-->
+        </div>
+        <button class="btn-danger" style="margin-top:14px;width:100%;justify-content:center" onclick="doOthersLogout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Encerrar todas as outras sessões
+        </button>
+      </div>
+    </div>
+
+    <!-- ════ CONFIGURAÇÕES ════ -->
+<div class="panel active" id="panel-settings">
+
+  <div class="panel-hd">
+    <div class="panel-hd-left">
+      <h2>Configurações</h2>
+      <p>Personalize sua experiência na site</p>
+    </div>
+
+    <button class="btn-primary" id="saveSettingsBtn" onclick="saveSettings()">
+      <i class="fa-solid fa-floppy-disk"></i>
+      Salvar
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="settings-section">
+      <div class="settings-title">Aparência</div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Ícones estilizados</h4>
+          <p>Ícones personalizados com identidade visual marcante.</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingStyledIcons"
+            checked
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Tema</h4>
+          <p>Escolha entre claro, escuro ou automático</p>
+        </div>
+        <div class="theme-btns" id="themeSwitch">
+          <div
+            class="theme-opt light"
+            onclick="setTheme(this,'light')"
+            data-theme-choice="light"
+            role="radio"
+            aria-checked="false"
+            title="Claro"
+          >
+            <i class="fa-solid fa-sun"></i>
+          </div>
+          <div
+            class="theme-opt dark"
+            onclick="setTheme(this,'dark')"
+            data-theme-choice="dark"
+            role="radio"
+            aria-checked="false"
+            title="Escuro"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </div>
+          <div
+            class="theme-opt auto"
+            onclick="setTheme(this,'auto')"
+            data-theme-choice="auto"
+            role="radio"
+            aria-checked="false"
+            title="Automático"
+          >
+            <i class="fa-solid fa-gear"></i>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Idioma</h4>
+          <p>Idioma exibido na interface</p>
+        </div>
+        <select class="lang-sel" id="settingLanguage">
+          <option value="pt-BR">🇧🇷 Português (BR)</option>
+          <option value="en-US">🇺🇸 English (US)</option>
+          <option value="es-ES">🇪🇸 Español</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Moeda</h4>
+          <p>Moeda para exibição de preços</p>
+        </div>
+        <select class="currency-sel" id="settingCurrency">
+          <option value="BRL">R$ — Real Brasileiro</option>
+          <option value="USD">$ — Dólar Americano</option>
+          <option value="EUR">€ — Euro</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Privacidade</div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Perfil público</h4>
+          <p>Outros usuários podem ver seu perfil e avaliações</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingProfilePublic"
+            checked
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Histórico de compras visível</h4>
+          <p>Mostrar produtos comprados em recomendações</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingPurchaseHistory"
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Personalização por IA</h4>
+          <p>Receber recomendações com base no comportamento</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingAiPersonalization"
+            checked
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Compartilhar dados com parceiros</h4>
+          <p>Autorizar uso de dados para anúncios relevantes</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingPartnerData"
+            checked
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Acessibilidade</div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Fonte maior</h4>
+          <p>Aumentar tamanho do texto na interface</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingLargerFont"
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Alto contraste</h4>
+          <p>Aumentar contraste para melhor legibilidade</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingHighContrast"
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+    </div>
+    <div class="settings-section" style="margin-bottom:0">
+      <div class="settings-title">Desempenho</div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Reduzir animações</h4>
+          <p>Desativar efeitos e transições</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingReduceAnimations"
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-left">
+          <h4>Otimizar desempenho</h4>
+          <p>Ter o máximo de desempenho e fluidez em todo o site</p>
+        </div>
+        <label class="toggle-wrap">
+          <input
+            type="checkbox"
+            class="toggle-inp"
+            id="settingOptimizePerformance"
+          >
+          <div class="toggle-lbl"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+      <div class="card">
+        <div class="danger-zone">
+          <h4>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Zona de Perigo
+          </h4>
+          <p>Estas ações são irreversíveis. Proceda com cautela.</p>
+          <div class="btns">
+            <button class="btn-danger" onclick="exportUserData()">
+              <i class="fa-solid fa-file-export"></i>
+              Exportar meus dados
+            </button>
+            <button class="btn-danger" onclick="pauseAccount()">
+              <i class="fa-solid fa-pause"></i>
+              Pausar conta
+            </button>
+            <button class="btn-danger-delete" onclick="showDeleteAccountConfirm()">
+              <i class="fa-solid fa-trash-can"></i>
+              Excluir conta permanentemente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ LOGOUT ════ -->
+    <div class="panel" id="panel-logout">
+      <div class="card">
+        <div class="logout-area">
+          <div class="logout-ico">👋</div>
+          <h3>Sair da sua conta?</h3>
+          <p>Você precisará fazer login novamente para acessar seus pedidos, favoritos e configurações.</p>
+          <div class="logout-btns">
+            <button class="btn-danger" onclick="doLogout()" style="padding:12px 28px;font-size:13px">🚪 Sair agora</button>
+            <button class="btn-ghost" onclick="showPanel('profile')">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+  <!-- MENU SIDEBAR -->
+  <div class="overlay" id="menuOverlay" onclick="closeMenu()"></div>
+  <div class="menu-sb" id="menuSidebar">
+    <div class="menu-hd">
+      <h3>Menu de Navegação</h3>
+      <button class="menu-cls" onclick="closeMenu()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="menu-body">
+      <button class="menu-profile-summary" onclick="showPanel('profile',this); closeMenu()">
+        <div class="menu-avatar-large">
+          <img style="display:none" id="menuSidebarAvatar" src="" alt="Avatar">
+          <i class="fa-solid fa-user" id="menuSidebarIcon"></i>
+        </div>
+        <div class="menu-info" style="gap: 3px; display: flex; align-items: baseline;">
+          <strong id="menuSidebarName"></strong>
+          <span id="menuSidebarEmail"></span>
+        </div>
+      </button>
+      <div class="menu-menu-group">
+        <p class="menu-label">Conta</p>
+        <button class="btn-menu-option" onclick="showPanel('profile',this); closeMenu()">
+          <i class="fa-solid fa-user"></i>
+          <span>Meu Perfil</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('wishlist',this); closeMenu()">
+          <i class="fa-solid fa-heart"></i>
+          <span>Lista de Desejos</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('cart',this); closeMenu()">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Meu Carrinho</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('coupons',this); closeMenu()">
+          <i class="fa-solid fa-ticket"></i>
+          <span>Meus Cupons</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('reviews',this); closeMenu()">
+          <i class="fa-solid fa-star"></i>
+          <span>Minhas Avaliações</span>
+        </button>
+      </div>
+      <div class="menu-menu-group">
+        <p class="menu-label">Configurações</p>
+        <button class="btn-menu-option" onclick="showPanel('addresses',this); closeMenu()">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>Endereços</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('payments',this); closeMenu()">
+          <i class="fa-solid fa-credit-card"></i>
+          <span>Pagamentos</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('notifications',this); closeMenu()">
+          <i class="fa-solid fa-bell"></i>
+          <span>Notificações</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('security',this); closeMenu()">
+          <i class="fa-solid fa-lock"></i>
+          <span>Segurança</span>
+        </button>
+        <button class="btn-menu-option" onclick="showPanel('settings',this); closeMenu()">
+          <i class="fa-solid fa-gear"></i>
+          <span>Configurações</span>
+        </button>
+      </div>
+      <div class="menu-ft">
+        <button class="btn-logout-sb" onclick="openConfirmLogout(); closeMenu()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          Sair da Conta
+        </button>
+      </div>
+    </div>
+  </div>
+    
+  <!-- PRODUCT MODAL -->
+  <div class="modal-ov" id="modalOverlay" onclick="handleModalClick(event)">
+    <div class="modal">
+      <div class="modal-img-area">
+        <div class="modal-img" id="modalImg">
+          <button class="btn-mwish1" id="mWish" onclick="addFromModal2()">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          </button>
+          <button class="mcls" onclick="closeProductModal()">
+            <svg viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          <div class="mArrows">
+            <button class="pArrow1" onclick="previousImg()"><i class="fa-solid fa-chevron-right arrow0 arrow1"></i></button>
+            <button class="pArrow2" onclick="nextImg()"><i class="fa-solid fa-chevron-right arrow0 arrow2"></i></button>
+          </div>
+          <span id="mEmoji"></span>
+        </div>
+        <div class="m-qty-ctrl1">
+          <button class="qb1" onclick="chgQty(-1)">−</button>
+          <span class="m-qty-num1" id="mQty">1</span>
+          <button class="qb1" onclick="chgQty(1)">+</button>
+        </div>
+        <div class="modal-gallery" id="modalGallery"></div>
+      </div>
+      <div class="modal-info">
+        <div class="m-cat" id="mCat"></div>
+        <div class="m-name" id="mName"></div>
+        <div class="m-desc" id="mDesc"></div>
+        <div class="m-price-row">
+          <span class="m-price" id="mPrice"></span>
+          <span class="m-old" id="mOld"></span>
+          <span class="m-disc" id="mDisc"></span>
+        </div>
+        <div class="m-feats" id="mFeats"></div>
+        <hr class="m-div">
+        <div class="m-qty-row">
+          <span class="m-qty-lbl">Quantidade:</span>
+          <div class="m-qty-ctrl0">
+            <button class="qb" onclick="chgQty(-1)">−</button>
+            <span class="m-qty-num" id="mQty">1</span>
+            <button class="qb" onclick="chgQty(1)">+</button>
+          </div>
+        </div>
+        <div class="m-btns">
+          <span class="m-price1" id="mPrice1"></span>
+          <button class="btn-madd" onclick="addFromModal()">
+            <svg style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.5" viewBox="0 0 24 24">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            Adicionar ao Carrinho
+          </button>
+          <button class="btn-mwish" id="mWish" onclick="addFromModal2()">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- CROP MODAL -->
+<div id="cropModal" class="crop-modal">
+  <div class="crop-modal-content">
+    <div class="crop-hd">
+      <h3>Ajustar Foto</h3>
+      <button class="cart-cls" onclick="closeCropModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="img-container">
+      <img id="imageToCrop" src="" alt="Imagem para recortar">
+    </div>
+    <div class="av-btns" style="justify-content: flex-end; margin-top: 15px;">
+      <button class="btn-xs gray" onclick="closeCropModal()">Cancelar</button>
+      <button class="btn-xs blue" onclick="executeCrop()"><span style="font-weight: bold;">✓&nbsp;</span> Continuar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADDRESS MODAL -->
+<div id="newAddrModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Novo Endereço</h3>
+    
+    <div class="input-group">
+      <label>Nome de quem vai receber (Destinatário)</label>
+      <input type="text" id="recipientInp" placeholder="Ex: João da Silva">
+    </div>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label>Tipo</label>
+        <select id="typeInp">
+          <option value="Casa">Casa</option>
+          <option value="Trabalho">Trabalho</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>CEP</label>
+        <input type="text" id="cepInp" placeholder="00000-000" onblur="fetchCep()">
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="input-group" style="flex: 2;">
+        <label>Rua / Avenida</label>
+        <input type="text" id="streetInp" placeholder="Ex: Rua das Flores">
+      </div>
+      <div class="input-group" style="flex: 1;">
+        <label>Número</label>
+        <input type="text" id="numInp" placeholder="Ex: 123">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>Complemento (Opcional)</label>
+      <input type="text" id="compInp" placeholder="Ex: Apto 42, Bloco B">
+    </div>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label>Bairro</label>
+        <input type="text" id="neighInp">
+      </div>
+      <div class="input-group">
+        <label>Cidade</label>
+        <input type="text" id="cityInp">
+      </div>
+      <div class="input-group">
+        <label>Estado (UF)</label>
+        <input type="text" id="stateInp" maxlength="2">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn gray" onclick="closeAddressModal()">Cancelar</button>
+      <button class="btn blue" onclick="submitNewAddress()">Salvar Endereço</button>
+    </div>
+  </div>
+</div>
+  
+<!-- QUICKLINK -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js"></script>
+<script>
+  // Start the Quicklink
+  window.addEventListener('load', () => {
+    quicklink.listen();
+  });
+</script>
+  
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://dbfwnioveiaanhshnoqx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_9RC05YRA18mpY3KGnir1Ag_ZMn7hGyk";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let userId = null;
+
+const fmt = p => {
+  if (typeof window.formatsitePrice === 'function') {
+    return window.formatsitePrice(p);
+  }
+  return p != null ? 'R$ ' + Number(p).toFixed(2).replace('.', ',') : '';
+};
+const $ = id => document.getElementById(id);
+</script>
+<script src="/files/scripts/sidebars.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
