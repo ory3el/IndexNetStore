@@ -180,7 +180,7 @@ header{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);background: v
 }
 .nav-links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--c2);transition:width .25s}
 .nav-links a:hover::after{width:100%}
-.icon-btn{background: transparent;box-shadow: 0 0 20px var(--overlay-bg);border: none;color: var(--black);display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;transition: transform 0.25s, box-shadow 0.25s;}
+.icon-btn{background: transparent !important;box-shadow: 0 0 20px var(--overlay-bg);border: none !important;color: var(--black) !important;display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;transition: transform 0.25s, box-shadow 0.25s;}
 .icon-btn:hover{transform: scale(1.05);box-shadow: 0 0 20px rgb(25 190 80 / 70%);}
 
 .login-btn{
@@ -291,13 +291,13 @@ header{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);background: v
   overflow:hidden
   }
 .about::before{content:'';position:absolute;inset:0;background-image: repeating-linear-gradient(90deg,rgba(0,0,0,0) 0 1px,transparent 1px 60px);opacity:.5}
-.panel{position:relative;max-width:720px;margin:0 auto;background: var(--white);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding: 48px 50px clamp(24px,5vw,64px);box-shadow: 0 30px 80px rgb(0 0 0 / 30%);text-align:center}
+.panel{position:relative;max-width:720px;margin:0 auto;background: var(--white);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);border-radius: 50px;padding: 48px 50px clamp(24px,5vw,64px);box-shadow: 0 30px 80px rgb(0 0 0 / 30%);text-align:center}
 .panel h2{font-size:clamp(28px,4vw,40px);font-weight:800;margin:0 0 22px}
 .panel p{color: var(--text);font-size:15px;line-height:1.8;margin:0 0 16px}
 .panel .mark{margin-top:20px;font-family:Georgia,serif;font-size:22px;opacity:.6}
 
 /* footer */
-footer{background: var(--black);border-top: 1px solid var(--border);position: relative;top: 20px;border-radius: 36px 36px 0 0;padding: 50px 0 30px;}
+footer{background: var(--black) !important;border-top: 1px solid var(--border);position: relative;top: 50px;border-radius: 50px 50px 0 0;padding: 50px 0 30px;}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
 footer .logo{color: var(--white)}
@@ -306,7 +306,7 @@ footer li{list-style:none;margin-bottom:10px}
 footer ul{margin:0 !important;padding: 0 !important;position: relative;left: 0 !important}
 footer a{color: var(--muted2);font-size:13.5px;transition:color .2s}
 footer a:hover{color:#fff}
-.foot-bottom{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color: var(--muted2);font-size:12.5px}
+.foot-bottom{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);position: relative;bottom: 10px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color: var(--muted2);font-size:12.5px}
 .social{display:flex;gap:10px;margin-top:14px}
 
 /* cart drawer */
@@ -485,7 +485,7 @@ footer a:hover{color:#fff}
   background: transparent; color: var(--text);
   font-size: 14px; font-weight: 500; transition: background 0.2s, transform 0.2s;
 }
-.btn-acc-option i { font-size: 16px; color: var(--blue); width: 20px; text-align: center; }
+.btn-acc-option i {font-size: 16px;color: var(--black);width: 20px;text-align: center;}
 .btn-acc-option:hover { background: var(--blue-dim); color: var(--blue); transform: translateX(5px); }
 
 .acc-ft {margin-top: auto;padding-top: 10px;}
