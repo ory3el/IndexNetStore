@@ -6,6 +6,8 @@
 <title>TheBay SuperStore | Seguraça e Praticidade</title>
 
 <link href="styles.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="icon" id="favicon" type="image/png" href="/files/images/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -281,7 +283,15 @@
   <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
     <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
-  
+
+  <!-- QUICKLINK -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      quicklink.listen();
+    });
+  </script>
+	
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://dbfwnioveiaanhshnoqx.supabase.co";
