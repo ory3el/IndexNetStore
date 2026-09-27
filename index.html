@@ -26,15 +26,15 @@
       <button class="icon-btn" aria-label="Idioma" title="PT-BR">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/></svg>
       </button>
-      <button class="icon-btn hidden" id="headerProfileContainer" aria-label="Minha conta">
-        <img id="headerAvatar" src="/images/icons/full/user.webp" alt="Perfil">
-      </button>
       <button class="icon-btn" style="position:relative" aria-label="Carrinho" onclick="openCart()">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1.4"/><circle cx="18" cy="21" r="1.4"/><path d="M2.5 3h2.4l2.7 12.4a2 2 0 002 1.6h8a2 2 0 002-1.7L21 8H6"/></svg>
         <span class="cart-count" id="cartCount">0</span>
       </button>
       <button class="icon-btn hamburger" aria-label="Menu" onclick="toggleMenu()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <button class="icon-btn header-profile hidden" id="headerProfileContainer" aria-label="Minha conta" onclick="closeAcc()">
+        <img id="headerAvatar" src="/images/icons/full/user.webp" alt="Perfil">
       </button>
       <button class="login-btn" id="authLoginBtn" aria-label="Entrar na conta" onclick="goToLogin()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--white)" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c1.5-4 5-6 8-6s6.5 2 8 6"></path></svg>
@@ -143,11 +143,145 @@
   </div>
 </aside>
 
-<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modalBox"></div>
-</div>
-<div id="toast"></div>
+  <!-- ACC SIDEBAR -->
+  <div class="overlay" id="accOverlay" onclick="closeAcc()"></div>
+  <div class="acc-sb" id="accSidebar">
+    <div class="acc-hd">
+      <h3>Minha Conta</h3>
+      <button class="acc-cls" onclick="closeAcc()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="acc-body">
+      <button class="acc-profile-summary" onclick="buttonLink('/settings')">
+        <div class="acc-avatar-large">
+		  <img style="display:none" id="accSidebarAvatar" src="" alt="Avatar">
+          <i class="fa-solid fa-user" id="accSidebarIcon"></i>
+        </div>
+        <div class="acc-info" style="gap: 3px; display: flex; align-items: baseline;">
+          <strong id="accSidebarName"></strong>
+          <span id="accSidebarEmail"></span>
+        </div>
+      </button>
+      <div class="acc-menu-group">
+        <p class="acc-label">Atalhos</p>
+        <button class="btn-acc-option" onclick="buttonLink('/settings')">
+          <i class="fa-solid fa-user-pen"></i>
+          <span>Editar Perfil</span>
+        </button>
+        <button class="btn-acc-option" onclick="buttonLink('/my-orders')">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Minhas Compras</span>
+        </button>
+        <button class="btn-acc-option" onclick="buttonLink('/reviews')">
+          <i class="fa-solid fa-star"></i>
+          <span>Minhas Avaliações</span>
+        </button>
+        <button class="btn-acc-option" onclick="openFav(); closeAcc();">
+          <i class="fa-solid fa-heart"></i>
+          <span>Lista de Desejos</span>
+        </button>
+      </div>
+      <div class="acc-menu-group">
+        <p class="acc-label">Suporte</p>
+        <button class="btn-acc-option" onclick="buttonLink('/support')">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Ajuda & FAQ</span>
+        </button>
+        <button class="btn-acc-option" onclick="buttonLink('/terms')">
+          <i class="fa-solid fa-file-contract"></i>
+          <span>Termos de Uso</span>
+        </button>
+      </div>
+      <div class="acc-ft">
+        <button class="btn-logout-sb" onclick="openConfirmLogout()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          Sair da Conta
+        </button>
+      </div>
+    </div>
+  </div>
+    
+  <!-- PRODUCT MODAL -->
+  <div class="modal-ov" id="modalOverlay" onclick="handleModalClick(event)">
+    <div class="modal">
+      <div class="modal-img-area">
+        <div class="modal-img" id="modalImg">
+          <button class="btn-mwish1" id="mWish1" onclick="event.stopPropagation(); toggleFav(String(curId));">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          </button>
+          <button class="mcls" onclick="closeProductModal()">
+            <svg viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          <div class="mArrows">
+            <button class="pArrow1" onclick="previousImg()"><i class="fa-solid fa-chevron-right arrow0 arrow1"></i></button>
+            <button class="pArrow2" onclick="nextImg()"><i class="fa-solid fa-chevron-right arrow0 arrow2"></i></button>
+          </div>
+          <span id="mEmoji"></span>
+        </div>
+        <div class="m-qty-ctrl1">
+          <button class="qb1" onclick="chgQty(-1)">−</button>
+          <span class="m-qty-num1" id="mQty">1</span>
+          <button class="qb1" onclick="chgQty(1)">+</button>
+        </div>
+        <div class="modal-gallery" id="modalGallery"></div>
+      </div>
+      <div class="modal-info">
+	   <div style="align-self: flex-start">
+        <div class="m-cat" id="mCat"></div>
+        <div class="m-name" id="mName"></div>
+        <div class="m-desc" id="mDesc"></div>
+	   </div>
 
+	   <div style="align-self: end">
+		<div class="m-feats" id="mFeats"></div>
+        <div class="m-price-row">
+          <span class="m-price" id="mPrice"></span>
+          <span class="m-old" id="mOld"></span>
+          <span class="m-disc" id="mDisc"></span>
+        </div>
+        <hr class="m-div">
+        <div class="m-qty-row">
+          <span class="m-qty-lbl">Quantidade:</span>
+          <div class="m-qty-ctrl0">
+            <button class="qb" onclick="chgQty(-1)">−</button>
+            <span class="m-qty-num" id="mQty">1</span>
+            <button class="qb" onclick="chgQty(1)">+</button>
+          </div>
+        </div>  
+        <div class="m-btns">
+          <span class="m-price1" id="mPrice1"></span>
+          <button class="btn-madd" onclick="openProductPage()">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            Ver Mais Informações
+          </button>
+		  <button class="btn-mcart" id="mCart" onclick="addFromModal()">
+          	<svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+		  </button>
+          <button class="btn-mwish" id="mWish" onclick="event.stopPropagation(); toggleFav(String(curId));">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        </div>
+      </div>
+	 </div>
+    </div>
+  </div>
+  
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <div class="toast-icon">✓</div>
+    <span id="toastMsg">Produto adicionado!</span>
+  </div>
+
+  <!-- BACK TO TOP -->
+  <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = "https://dbfwnioveiaanhshnoqx.supabase.co";
