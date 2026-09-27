@@ -403,6 +403,779 @@ function initThemeToggle() {
   });
 }
 
+// ============================================================
+
+window.siteLanguage = 'pt-BR';
+const siteOriginalTextNodes = new WeakMap();
+const siteOriginalAttributes = new WeakMap();
+let siteTranslationRunning = false;
+let siteTranslationObserver = null;
+let siteTranslationObserverTimer = null;
+
+function shouldIgnoreTranslationElement(element) {
+  if (!element) {
+    return true;
+  }
+
+  if (
+    element.closest(
+      'script, style, noscript, svg, code, pre, textarea'
+    )
+  ) {
+    return true;
+  }
+
+  if (
+    element.closest(
+      '[data-no-translate]'
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+
+function isMeaningfulTranslationText(text) {
+  if (!text) {
+    return false;
+  }
+
+  const clean =
+    text
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  if (!clean) {
+    return false;
+  }
+
+  if (/^[\d\s.,%$€£+\-/:]+$/.test(clean)) {
+    return false;
+  }
+
+  if (
+    /^https?:\/\//i.test(clean) ||
+    /^www\./i.test(clean)
+  ) {
+    return false;
+  }
+
+  if (
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+
+function getTranslationCache() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        'site_translation_cache'
+      );
+
+    if (!raw) {
+      return {};
+    }
+
+    return JSON.parse(raw);
+
+  } catch (error) {
+
+    console.warn(
+      'Erro ao ler cache de tradução:',
+      error
+    );
+
+    return {};
+  }
+}
+
+
+function saveTranslationCache(cache) {
+
+  try {
+
+    localStorage.setItem(
+      'site_translation_cache',
+      JSON.stringify(cache)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      'Erro ao salvar cache de tradução:',
+      error
+    );
+  }
+}
+
+
+function collectTranslationNodes() {
+
+  const items = [];
+
+  const walker =
+    document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+
+  let node;
+
+  while (
+    node = walker.nextNode()
+  ) {
+
+    const parent =
+      node.parentElement;
+
+    if (
+      !parent ||
+      shouldIgnoreTranslationElement(parent)
+    ) {
+      continue;
+    }
+
+    const source =
+      node.nodeValue
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    if (
+      !isMeaningfulTranslationText(source)
+    ) {
+      continue;
+    }
+
+    if (
+      !siteOriginalTextNodes.has(node)
+    ) {
+
+      siteOriginalTextNodes.set(
+        node,
+        node.nodeValue
+      );
+    }
+
+    items.push({
+      type: 'text',
+      node,
+      source
+    });
+  }
+
+  const elements =
+    document.querySelectorAll(
+      '[placeholder], [title], [aria-label]'
+    );
+
+  elements.forEach(element => {
+
+    if (
+      shouldIgnoreTranslationElement(element)
+    ) {
+      return;
+    }
+
+    [
+      'placeholder',
+      'title',
+      'aria-label'
+    ].forEach(attribute => {
+
+      const value =
+        element.getAttribute(attribute);
+
+      if (
+        !isMeaningfulTranslationText(value)
+      ) {
+        return;
+      }
+
+      if (
+        !siteOriginalAttributes.has(element)
+      ) {
+
+        siteOriginalAttributes.set(
+          element,
+          {}
+        );
+      }
+
+      const originals =
+        siteOriginalAttributes.get(element);
+
+      if (
+        originals[attribute] === undefined
+      ) {
+
+        originals[attribute] =
+          value;
+      }
+
+      items.push({
+        type: 'attribute',
+        element,
+        attribute,
+        source: value
+      });
+    });
+  });
+
+  return items;
+}
+
+
+function restoreOriginalPage() {
+
+  document
+    .querySelectorAll(
+      '[placeholder], [title], [aria-label]'
+    )
+    .forEach(element => {
+
+      const originals =
+        siteOriginalAttributes.get(
+          element
+        );
+
+      if (!originals) {
+        return;
+      }
+
+      Object.entries(originals)
+        .forEach(
+          ([attribute, value]) => {
+
+            element.setAttribute(
+              attribute,
+              value
+            );
+          }
+        );
+    });
+
+  const walker =
+    document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+
+  let node;
+
+  while (
+    node = walker.nextNode()
+  ) {
+
+    const original =
+      siteOriginalTextNodes.get(node);
+
+    if (original !== undefined) {
+      node.nodeValue = original;
+    }
+  }
+}
+
+
+async function requestTranslations(
+  language,
+  texts
+) {
+  if (!texts.length) {
+    return {};
+  }
+
+  let {
+    data: { session },
+    error: sessionError
+  } = await supabaseClient.auth.getSession();
+
+  if (sessionError) {
+    console.warn(
+      'Erro ao obter sessão:',
+      sessionError
+    );
+  }
+
+  if (!session?.access_token) {
+    console.warn(
+      'Sessão sem access_token. Tentando renovar...'
+    );
+
+    const {
+      data: refreshData,
+      error: refreshError
+    } = await supabaseClient.auth.refreshSession();
+
+    if (refreshError) {
+      console.error(
+        'Erro ao renovar sessão:',
+        refreshError
+      );
+      throw new Error('Não foi possível renovar a sessão da conta.');
+    }
+    session = refreshData?.session || null;
+  }
+
+  if (!session?.access_token) {
+    throw new Error(
+      'A sessão da conta não possui um access token válido.'
+    );
+  }
+
+  const response = await fetch(
+    `${SUPABASE_URL}/functions/v1/translate-texts`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY
+      },
+
+      body: JSON.stringify({
+        targetLanguage: language,
+        texts
+      })
+    }
+  );
+
+  const responseText = await response.text();
+  let responseData = {};
+  try {
+    responseData = responseText ? JSON.parse(responseText) : {};
+  } catch (error) {
+    console.error(
+      'Resposta inválida da Edge Function:',
+      responseText
+    );
+  }
+
+  if (!response.ok) {
+    console.error(
+      'Erro HTTP da Edge Function:',
+      response.status,
+      responseData
+    );
+
+    throw new Error(
+      responseData?.error ||
+      responseData?.message ||
+      `Erro HTTP ${response.status} ao traduzir.`
+    );
+  }
+
+  return responseData?.translations || {};
+}
+
+async function translatePage(
+  language = window.siteLanguage || 'pt-BR'
+) {
+
+  if (
+    siteTranslationRunning
+  ) {
+    return;
+  }
+
+  if (
+    !['pt-BR', 'en-US', 'es-ES']
+      .includes(language)
+  ) {
+    language = 'pt-BR';
+  }
+
+  window.siteLanguage =
+    language;
+
+  if (language === 'pt-BR') {
+
+    if (siteTranslationObserver) {
+      siteTranslationObserver.disconnect();
+    }
+
+    restoreOriginalPage();
+
+    if (siteTranslationObserver) {
+      siteTranslationObserver.observe(
+        document.body,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+    }
+
+    return;
+  }
+
+  siteTranslationRunning = true;
+
+  if (siteTranslationObserver) {
+    siteTranslationObserver.disconnect();
+  }
+
+  try {
+
+    restoreOriginalPage();
+
+    const items =
+      collectTranslationNodes();
+
+    if (!items.length) {
+      return;
+    }
+
+    const cache =
+      getTranslationCache();
+
+    const languageCache =
+      cache[language] || {};
+
+    const uniqueTexts =
+      [
+        ...new Set(
+          items.map(
+            item => item.source
+          )
+        )
+      ];
+
+    const missingTexts =
+      uniqueTexts.filter(
+        text =>
+          !languageCache[text]
+      );
+
+    for (
+      let i = 0;
+      i < missingTexts.length;
+      i += 40
+    ) {
+
+      const batch =
+        missingTexts.slice(
+          i,
+          i + 40
+        );
+
+      const translations =
+        await requestTranslations(
+          language,
+          batch
+        );
+
+      Object.assign(
+        languageCache,
+        translations
+      );
+    }
+
+    cache[language] =
+      languageCache;
+
+    saveTranslationCache(cache);
+
+    for (const item of items) {
+
+      const translated =
+        languageCache[item.source];
+
+      if (!translated) {
+        continue;
+      }
+
+      if (item.type === 'text') {
+
+        item.node.nodeValue =
+          item.node.nodeValue.replace(
+            item.source,
+            translated
+          );
+
+      }
+
+      if (
+        item.type === 'attribute'
+      ) {
+
+        item.element.setAttribute(
+          item.attribute,
+          translated
+        );
+      }
+    }
+
+  } catch (error) {
+
+    console.error(
+      'Erro ao traduzir página:',
+      error
+    );
+
+  } finally {
+
+    siteTranslationRunning = false;
+    if (siteTranslationObserver) {
+      siteTranslationObserver.observe(
+        document.body,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+    }
+  }
+}
+
+
+function initSiteTranslationObserver() {
+  if (!document.body) {
+    return;
+  }
+
+  siteTranslationObserver =
+    new MutationObserver(() => {
+
+      clearTimeout(
+        siteTranslationObserverTimer
+      );
+
+      siteTranslationObserverTimer =
+        setTimeout(() => {
+
+          translatePage(
+            window.siteLanguage
+          );
+
+        }, 250);
+    });
+
+  siteTranslationObserver.observe(
+    document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
+}
+window.siteTranslatePage = translatePage;
+
+// ============================================================
+
+window.siteDisplaySettings = window.siteDisplaySettings || {currency: 'BRL'};
+window.siteCurrencyRates = window.siteCurrencyRates || {BRL: 1, USD: null, EUR: null};
+window.siteFormatPrice =
+  window.siteFormatPrice || function(amount) {
+    const value = Number(amount);
+    if (!Number.isFinite(value)) {
+      return '';
+    }
+
+    const currency = window.siteDisplaySettings.currency || 'BRL';
+    const rate = Number(window.siteCurrencyRates[currency]);
+    if (
+      currency !== 'BRL' &&
+      (!Number.isFinite(rate) || rate <= 0)
+    ) {
+      return '';
+    }
+
+    const convertedValue = value * (currency === 'BRL' ? 1 : rate);
+    const localeMap = {
+      BRL: 'pt-BR',
+      USD: 'en-US',
+      EUR: 'de-DE'
+    };
+    return new Intl.NumberFormat(
+      localeMap[currency] || 'pt-BR',
+      {style: 'currency', currency}
+    ).format(convertedValue);
+  };
+
+// ------------------------------------------
+async function syncSiteDisplaySettings() {
+  window.siteDisplaySettings = {
+    theme: 'auto',
+    language: 'pt-BR',
+    currency: 'BRL'
+  };
+
+  try {
+    const {data: {user}} = await supabaseClient.auth.getUser();
+
+    if (user) {
+      const {data, error} = await supabaseClient
+        .from('user_settings')
+        .select('theme, language, currency')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Erro ao carregar configurações da conta:', error);
+      }
+
+      if (
+        ['pt-BR', 'en-US', 'es-ES'].includes(data?.language)
+      ) {
+        window.siteDisplaySettings.language = data.language;
+      }
+      
+      if (data) {
+        if (
+          ['light', 'dark', 'auto'].includes(data.theme)
+        ) {
+          window.siteDisplaySettings.theme = data.theme;
+        }
+
+        if (
+          ['BRL', 'USD', 'EUR'].includes(data.currency)
+        ) {
+          window.siteDisplaySettings.currency = data.currency;
+        }
+
+        try {
+          const localRaw = localStorage.getItem('site_settings');
+          const localSettings = localRaw
+            ? JSON.parse(localRaw)
+            : {};
+
+          localStorage.setItem(
+            'site_settings',
+            JSON.stringify({
+              ...localSettings,
+              theme: window.siteDisplaySettings.theme,
+              currency: window.siteDisplaySettings.currency
+            })
+          );
+        } catch (error) {
+          console.warn(
+            'Não foi possível atualizar o cache local:',
+            error
+          );
+        }
+      }
+    }
+
+    else {
+      try {
+        const localRaw = localStorage.getItem('site_settings');
+
+        if (localRaw) {
+          const localSettings = JSON.parse(localRaw);
+
+          if (
+            ['light', 'dark', 'auto'].includes(localSettings?.theme)
+          ) {
+            window.siteDisplaySettings.theme = localSettings.theme;
+          }
+
+          if (
+            ['BRL', 'USD', 'EUR'].includes(localSettings?.currency)
+          ) {
+            window.siteDisplaySettings.currency = localSettings.currency;
+          }
+        }
+      } catch (error) {
+        console.warn(
+          'Não foi possível ler as configurações locais:',
+          error
+        );
+      }
+    }
+
+    applyTheme(
+      window.siteDisplaySettings.theme || 'auto',
+      {
+        silent: true,
+        saveToSupabase: false
+      }
+    );
+
+    window.siteLanguage = window.siteDisplaySettings.language || 'pt-BR';
+    await translatePage(window.siteLanguage);
+    
+    const currency = window.siteDisplaySettings.currency || 'BRL';
+    if (currency === 'BRL') {
+      window.siteCurrencyRates.BRL = 1;
+      return;
+    }
+
+    const cachedRaw = localStorage.getItem('site_currency_rates');
+    if (cachedRaw) {
+      const cached = JSON.parse(cachedRaw);
+      const age =
+        Date.now() - Number(cached.savedAt || 0);
+
+      if (
+        age < 6 * 60 * 60 * 1000 &&
+        cached.rates?.USD &&
+        cached.rates?.EUR
+      ) {
+        window.siteCurrencyRates = cached.rates;
+        return;
+      }
+    }
+
+    const response = await fetch(
+      'https://api.frankfurter.dev/v2/rates?base=BRL&quotes=USD,EUR'
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const rows = await response.json();
+
+    const rates = {
+      BRL: 1,
+      USD: Number(
+        rows.find(row => row.quote === 'USD')?.rate || 0
+      ),
+      EUR: Number(
+        rows.find(row => row.quote === 'EUR')?.rate || 0
+      )
+    };
+
+    if (!rates.USD || !rates.EUR) {
+      throw new Error('Cotações inválidas.');
+    }
+
+    window.siteCurrencyRates = rates;
+    localStorage.setItem('site_currency_rates',
+      JSON.stringify({
+        savedAt: Date.now(),
+        rates
+      })
+    );
+
+  } catch (error) {
+    console.error(
+      'Não foi possível sincronizar as configurações:',
+      error
+    );
+
+    window.siteDisplaySettings.theme = 'light';
+    window.siteDisplaySettings.currency = 'BRL';
+
+    applyTheme(
+      window.siteDisplaySettings.theme || 'auto',
+      {
+        silent: true,
+        saveToSupabase: false
+      }
+    );
+  }
+}
+
 /* ─── STATE ─────────────────────────────────────────────────────────── */
 let cart = [];
 let fav = [];
