@@ -1,4 +1,4 @@
-/*function injectEcommeUI() {
+/*function injectSiteUI() {
   if (document.getElementById('cartSidebar')) return;
 
   document.body.insertAdjacentHTML('afterbegin', `
@@ -297,9 +297,9 @@
 <script src="/files/scripts/auth-session-check.js"></script>
 <script src="/files/scripts/console-warning.js"></script>
   `);
-  initEcommeUI()
+  initSiteUI()
 }
-function initEcommeUI() {*/
+function initSiteUI() {*/
 
 /* ─── UTILS ─────────────────────────────────────────────────────────── */
 const fmt = p => p != null ? 'R$ ' + Number(p).toFixed(2).replace('.', ',') : '';
@@ -886,8 +886,8 @@ function updateCart() {
   }
 
   if ($('cartCount')) $('cartCount').textContent = `(${count})`;
-  if ($('cartSub')) $('cartSub').textContent = window.ecommeFormatPrice(total);
-  if ($('cartTotal')) $('cartTotal').textContent = window.ecommeFormatPrice(total);
+  if ($('cartSub')) $('cartSub').textContent = window.siteFormatPrice(total);
+  if ($('cartTotal')) $('cartTotal').textContent = window.siteFormatPrice(total);
 
   const el = $('cartItems');
 
@@ -1674,9 +1674,9 @@ function openProduct(id) {
 
   $('mName').textContent = p.name;
   $('mDesc').textContent = p.desc;
-  $('mPrice').textContent = window.ecommeFormatPrice(p.price);
-  $('mPrice1').textContent = window.ecommeFormatPrice(p.price);
-  $('mOld').textContent = p.old > 0 ? window.ecommeFormatPrice(p.old) : '';
+  $('mPrice').textContent = window.siteFormatPrice(p.price);
+  $('mPrice1').textContent = window.siteFormatPrice(p.price);
+  $('mOld').textContent = p.old > 0 ? window.siteFormatPrice(p.old) : '';
   $('mDisc').textContent = p.discount > 0 ? `-${p.discount}% OFF` : '';
   $('mFeats').innerHTML = p.features.map(f =>
       `<div class="m-feat">
