@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const redirectParam = urlParams.get('redirect');
   
   if (redirectParam) {
-    localStorage.setItem('ecomme_redirect_url', redirectParam);
+    localStorage.setItem('page_redirect_url', redirectParam);
   }
 });
 
@@ -510,13 +510,13 @@ async function loginExistingGoogleAccount(credential, account) {
 
     let message = error?.message || 'Não foi possível entrar com o Google.';
     if (error?.code === 'identity_already_exists') {
-      message = 'Essa conta Google já está vinculada a outro usuário Ecomme.';
+      message = 'Essa conta Google já está vinculada a outro usuário na TheBay.';
     }
     else if (error?.code === 'email_not_confirmed') {
       message = 'O e-mail dessa conta ainda não foi confirmado.';
     }
     else if (error?.code === 'user_already_exists') {
-      message = 'Já existe uma conta Ecomme com esse e-mail.';
+      message = 'Já existe uma conta na TheBay com esse e-mail.';
     }
     toast(message, 'err');
   }
@@ -863,7 +863,7 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
         );
       }
 
-      localStorage.removeItem('ecomme_redirect_url');
+      localStorage.removeItem('page_redirect_url');
       if (
         document.getElementById('formLogin')
       ) {
@@ -887,7 +887,7 @@ supabaseClient.auth.onAuthStateChange(async (event, session) => {
 
 // ── REDIRECT FUNCTION ──
 function getTargetUrl() {
-  const storedRedirect = localStorage.getItem('ecomme_redirect_url');
+  const storedRedirect = localStorage.getItem('page_redirect_url');
   if (storedRedirect) {
     return storedRedirect;
   }
