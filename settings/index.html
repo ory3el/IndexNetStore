@@ -1252,14 +1252,6 @@ const SUPABASE_URL = "https://dbfwnioveiaanhshnoqx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_9RC05YRA18mpY3KGnir1Ag_ZMn7hGyk";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let userId = null;
-
-const fmt = p => {
-  if (typeof window.formatsitePrice === 'function') {
-    return window.formatsitePrice(p);
-  }
-  return p != null ? 'R$ ' + Number(p).toFixed(2).replace('.', ',') : '';
-};
-const $ = id => document.getElementById(id);
 </script>
 <script src="/files/scripts/sidebars.js"></script>
 <script src="script.js"></script>
