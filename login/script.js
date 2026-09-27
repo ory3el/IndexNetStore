@@ -250,7 +250,7 @@ function createGoogleConfirmModal() {
         </h3>
         <p>
           Verifique os dados da conta Google
-          antes de criar sua conta na Ecomme.
+          antes de criar sua conta na TheBay.
         </p>
       </div>
       <div class="google-confirm-grid">
