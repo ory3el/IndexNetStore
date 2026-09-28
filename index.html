@@ -3,23 +3,179 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Site Indiponível</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<title>Site indisponível</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Marck+Script&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-  body{display:grid;height: 100vh;overflow: hidden;justify-content:center;align-items:center;}
-  h1{font-family:'Poppins',serif;font-size:60px;font-weight:500;}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+
+    font-family: 'Outfit', sans-serif;
+
+    background:
+      radial-gradient(circle at top, #f5f5f5 0%, #eeeeee 45%, #e5e5e5 100%);
+
+    color: #111;
+  }
+
+  .container {
+    width: min(100%, 650px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    padding: 55px 45px;
+    border-radius: 28px;
+
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .icon {
+    width: 82px;
+    height: 82px;
+
+    margin-bottom: 28px;
+
+    opacity: 0.9;
+
+    animation: fadeIn 0.7s ease;
+  }
+
+  h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.15;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+
+    animation: fadeIn 0.8s ease 0.1s both;
+  }
+
+  p {
+    margin-top: 14px;
+
+    max-width: 460px;
+
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+
+    color: #666;
+
+    animation: fadeIn 0.8s ease 0.2s both;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 500px) {
+    .container {
+      padding: 45px 25px;
+      border-radius: 24px;
+    }
+
+    .icon {
+      width: 70px;
+      height: 70px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: 31px;
+      letter-spacing: -1px;
+    }
+
+    p {
+      font-size: 15px;
+    }
+  }
 </style>
-  
 </head>
+
 <body>
 
-<svg width="80px" height="80px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.493 0.015 C 7.442 0.021,7.268 0.039,7.107 0.055 C 5.234 0.242,3.347 1.208,2.071 2.634 C 0.660 4.211,-0.057 6.168,0.009 8.253 C 0.124 11.854,2.599 14.903,6.110 15.771 C 8.169 16.280,10.433 15.917,12.227 14.791 C 14.017 13.666,15.270 11.933,15.771 9.887 C 15.943 9.186,15.983 8.829,15.983 8.000 C 15.983 7.171,15.943 6.814,15.771 6.113 C 14.979 2.878,12.315 0.498,9.000 0.064 C 8.716 0.027,7.683 -0.006,7.493 0.015 M8.853 1.563 C 9.548 1.653,10.198 1.848,10.840 2.160 C 11.538 2.500,12.020 2.846,12.587 3.413 C 13.154 3.980,13.500 4.462,13.840 5.160 C 14.285 6.075,14.486 6.958,14.486 8.000 C 14.486 9.054,14.284 9.932,13.826 10.867 C 13.654 11.218,13.307 11.781,13.145 11.972 L 13.090 12.037 8.527 7.473 L 3.963 2.910 4.028 2.855 C 4.219 2.693,4.782 2.346,5.133 2.174 C 6.305 1.600,7.555 1.395,8.853 1.563 M7.480 8.534 L 12.040 13.095 11.973 13.148 C 11.734 13.338,11.207 13.662,10.867 13.828 C 10.239 14.135,9.591 14.336,8.880 14.444 C 8.456 14.509,7.544 14.509,7.120 14.444 C 5.172 14.148,3.528 13.085,2.493 11.451 C 2.279 11.114,1.999 10.526,1.859 10.119 C 1.468 8.989,1.403 7.738,1.670 6.535 C 1.849 5.734,2.268 4.820,2.766 4.147 C 2.836 4.052,2.899 3.974,2.907 3.974 C 2.914 3.974,4.972 6.026,7.480 8.534 " stroke="none" fill-rule="evenodd" fill="#000000"></path></svg>
-<h1>Site indisponível no momento.</h1>
-  
+  <main class="container">
+
+    <svg
+      class="icon"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M7.493 0.015 C 7.442 0.021,7.268 0.039,7.107 0.055
+        C 5.234 0.242,3.347 1.208,2.071 2.634
+        C 0.660 4.211,-0.057 6.168,0.009 8.253
+        C 0.124 11.854,2.599 14.903,6.110 15.771
+        C 8.169 16.280,10.433 15.917,12.227 14.791
+        C 14.017 13.666,15.270 11.933,15.771 9.887
+        C 15.943 9.186,15.983 8.829,15.983 8.000
+        C 15.983 7.171,15.943 6.814,15.771 6.113
+        C 14.979 2.878,12.315 0.498,9.000 0.064
+        C 8.716 0.027,7.683 -0.006,7.493 0.015
+        M8.853 1.563
+        C 9.548 1.653,10.198 1.848,10.840 2.160
+        C 11.538 2.500,12.020 2.846,12.587 3.413
+        C 13.154 3.980,13.500 4.462,13.840 5.160
+        C 14.285 6.075,14.486 6.958,14.486 8.000
+        C 14.486 9.054,14.284 9.932,13.826 10.867
+        C 13.654 11.218,13.307 11.781,13.145 11.972
+        L 13.090 12.037 8.527 7.473
+        L 3.963 2.910 4.028 2.855
+        C 4.219 2.693,4.782 2.346,5.133 2.174
+        C 6.305 1.600,7.555 1.395,8.853 1.563
+        M7.480 8.534
+        L 12.040 13.095
+        L 11.973 13.148
+        C 11.734 13.338,11.207 13.662,10.867 13.828
+        C 10.239 14.135,9.591 14.336,8.880 14.444
+        C 8.456 14.509,7.544 14.509,7.120 14.444
+        C 5.172 14.148,3.528 13.085,2.493 11.451
+        C 2.279 11.114,1.999 10.526,1.859 10.119
+        C 1.468 8.989,1.403 7.738,1.670 6.535
+        C 1.849 5.734,2.268 4.820,2.766 4.147
+        C 2.836 4.052,2.899 3.974,2.907 3.974
+        C 2.914 3.974,4.972 6.026,7.480 8.534"
+        fill="#000000"
+      />
+    </svg>
+    <h1>Site indisponível no momento.</h1>
+    <p>Estamos trabalhando para restabelecer o acesso. Tente novamente mais tarde.</p>
+  </main>
+
 </body>
 </html>
