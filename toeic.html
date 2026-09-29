@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste TOEIC (Reading)</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #d1d5db;
+    --border-light: #e5e7eb;
+    --panel: #f8f9fa;
+    --chip: #e9edf3;
+    --accent: #1d4ed8;
+    --accent-soft: #eff4ff;
+    --radius: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Inter, Roboto, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 32px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+  .logo small { font-size: 9px; font-weight: 400; vertical-align: bottom; }
+  .title { font-size: 13px; font-weight: 600; }
+  .title span { font-weight: 400; color: var(--muted); }
+  .timers { display: flex; gap: 16px; }
+  .timer { text-align: center; }
+  .timer label { display: block; font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+  .timer strong { font-size: 11px; font-variant-numeric: tabular-nums; }
+
+  /* Corpo */
+  main { max-width: 1000px; margin: 0 auto; padding: 28px 20px 40px; }
+  .block-header { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .columns { display: grid; grid-template-columns: 2fr 3fr; gap: 24px; align-items: start; }
+  .context {
+    background: var(--panel);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .context p { margin-bottom: 14px; }
+  .context p:last-child { margin-bottom: 0; }
+  .context mark { background: none; color: #c2410c; }
+
+  .question { margin-bottom: 24px; }
+  .question h3 { font-size: 14px; font-weight: 500; margin-bottom: 10px; }
+  .option {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: left;
+    font-size: 13px;
+    color: var(--text);
+    transition: border-color .15s, background .15s;
+  }
+  .option:hover { border-color: #9ca3af; }
+  .option .letter {
+    flex: none;
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--chip);
+    font-size: 11px; font-weight: 600; color: #000;
+  }
+  .option.selected { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent); }
+  .option.selected .letter { background: var(--accent); color: #fff; }
+  .option:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Navegação */
+  footer { display: flex; justify-content: space-between; margin-top: 8px; }
+  .btn { padding: 7px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; }
+  .btn-prev { background: var(--bg); border: 1px solid var(--muted); color: var(--muted); }
+  .btn-prev:hover:not(:disabled) { color: var(--text); border-color: var(--text); }
+  .btn-prev:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-next { background: var(--accent); border: none; color: #fff; }
+  .btn-next:hover { background: #1e40af; }
+
+  /* Resultados */
+  #results { display: none; max-width: 760px; margin: 0 auto; padding: 64px 20px; text-align: center; }
+  #results .confetti { font-size: 56px; line-height: 1; }
+  #results h1 { font-size: 32px; margin: 12px 0 4px; }
+  #results p.sub { color: var(--muted); margin-bottom: 32px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { padding: 24px 12px; border-radius: 12px; }
+  .card .icon { font-size: 28px; }
+  .card .value { font-size: 36px; font-weight: 700; line-height: 1.2; }
+  .card .label { font-size: 13px; color: var(--muted); }
+  .card.yellow { background: #fef9c3; }
+  .card.green { background: #dcfce7; }
+  .card.blue { background: #dbeafe; }
+  .details { margin: 24px 0; color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 720px) {
+    .columns, .cards { grid-template-columns: 1fr; }
+    header { padding: 8px 14px; }
+    .title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">*toeic.<small>®</small></div>
+    <div class="title">Simulado Teste TOEIC <span>(Reading)</span></div>
+  </div>
+  <div class="timers">
+    <div class="timer"><label>Tempo decorrido</label><strong id="elapsed">00:00</strong></div>
+    <div class="timer"><label>Tempo restante</label><strong id="remaining">75:00</strong></div>
+  </div>
+</header>
+
+<main id="quiz">
+  <div class="block-header" id="blockHeader"></div>
+  <div class="columns">
+    <section class="context" id="context"></section>
+    <section id="questions"></section>
+  </div>
+  <footer>
+    <button class="btn btn-prev" id="prevBtn">Anterior</button>
+    <button class="btn btn-next" id="nextBtn">Próxima</button>
+  </footer>
+</main>
+
+<section id="results">
+  <div class="confetti">🎉</div>
+  <h1>Muito bem!</h1>
+  <p class="sub">Você concluiu o teste TOEIC.</p>
+  <div class="cards">
+    <div class="card yellow"><div class="icon">🏆</div><div class="value" id="resPoints">152</div><div class="label">Pontos</div></div>
+    <div class="card green"><div class="icon">✅</div><div class="value" id="resAccuracy">76%</div><div class="label">Precisão</div></div>
+    <div class="card blue"><div class="icon">📊</div><div class="value" id="resLevel">B1</div><div class="label">Nível CEFR (aprox.)</div></div>
+  </div>
+  <p class="details" id="resDetails"></p>
+  <button class="btn btn-next" id="restartBtn">Refazer simulado</button>
+</section>
+
+<script>
+  /* ---------- Banco de dados simulado ---------- */
+  const blocos = [
+    {
+      id_bloco: 1,
+      header_bloco: "Questões 100-103 de 200",
+      texto_contexto: `
+        <p>Questions 100-103 refer to the following article.</p>
+        <p><strong>Sleep Better Tonight</strong></p>
+        <p>Are you sick and tired of insomnia? You are not alone. Millions of people struggle to fall asleep because of stress, irregular schedules, too much caffeine, or long hours in front of a screen.</p>
+        <p>Experts recommend a few simple habits: go to bed at the same time every night, avoid coffee after 3 p.m., and keep your bedroom dark and quiet. Reading a book instead of checking your phone can also help your mind relax.</p>
+        <p>If sleeplessness lasts more than a month, consult a doctor. Persistent insomnia can affect your mood, your memory, and your health.</p>`,
+      questoes: [
+        { id: 150, enunciado: "What is the purpose of the article?",
+          opcoes: [
+            { letra: "A", texto: "To inform about various causes of sleep disorder" },
+            { letra: "B", texto: "To avoid alcohol" },
+            { letra: "C", texto: "To contribute to a better day" },
+            { letra: "D", texto: "To improve your mental well-being" }],
+          resposta_correta: "A" },
+        { id: 151, enunciado: "What is NOT mentioned as a cause of insomnia?",
+          opcoes: [
+            { letra: "A", texto: "Stress" },
+            { letra: "B", texto: "Caffeine" },
+            { letra: "C", texto: "Noisy neighbors" },
+            { letra: "D", texto: "Screen time" }],
+          resposta_correta: "C" },
+        { id: 152, enunciado: "What do experts recommend doing after 3 p.m.?",
+          opcoes: [
+            { letra: "A", texto: "Taking a nap" },
+            { letra: "B", texto: "Avoiding coffee" },
+            { letra: "C", texto: "Exercising outdoors" },
+            { letra: "D", texto: "Reading emails" }],
+          resposta_correta: "B" },
+        { id: 153, enunciado: "When should a reader see a doctor?",
+          opcoes: [
+            { letra: "A", texto: "After one bad night" },
+            { letra: "B", texto: "When the bedroom is too dark" },
+            { letra: "C", texto: "If sleeplessness lasts over a month" },
+            { letra: "D", texto: "Before reading a book" }],
+          resposta_correta: "C" }
+      ]
+    },
+    {
+      id_bloco: 2,
+      header_bloco: "Questões 104-106 de 200",
+      texto_contexto: `
+        <p>Questions 104-106 refer to the following email.</p>
+        <p>Date: April 4<br>From: <mark>HR</mark> department<br>To: Staff<br>Subject: Announcement</p>
+        <p>Dear Staff,</p>
+        <p>I am pleased to announce that Kenzo Sato is joining ASY Industry to fill our open position in the engineering department. His first day is Wednesday, May 6.</p>
+        <p>Kenzo has worked for a number of years in one of the largest global manufacturers of vehicles, where he successfully managed his tasks with enthusiasm and professionalism. We are delighted to welcome him to the ASY team. If you see him around the building, make sure you welcome him to the company and answer any questions he might have. He will take part in employee onboarding activities for his first couple of weeks on the job.</p>
+        <p>Kenzo will work closely with the automotive team and will be responsible for the new car design project. Those who are involved in this project should feel free to reach out to Kenzo via email at kenzo_sto@asy.com or call him directly at 555-4830. We believe that Kenzo has a lot to share with his new coworkers, as he spent many years abroad.</p>
+        <p>Thanks for joining in welcoming Kenzo to the team.</p>
+        <p>Regards,</p>
+        <p>Klaus Weismann<br>HR Manager</p>`,
+      questoes: [
+        { id: 167, enunciado: "Who is the letter intended for?",
+          opcoes: [
+            { letra: "A", texto: "Engineers" },
+            { letra: "B", texto: "Project team" },
+            { letra: "C", texto: "Human Resource Department" },
+            { letra: "D", texto: "Employees" }],
+          resposta_correta: "D" },
+        { id: 168, enunciado: "What is the main purpose of the letter?",
+          opcoes: [
+            { letra: "A", texto: "To welcome a new worker" },
+            { letra: "B", texto: "To present the new car design" },
+            { letra: "C", texto: "To greet the largest global manufacturer" },
+            { letra: "D", texto: "To invite employees for a new project" }],
+          resposta_correta: "A" },
+        { id: 169, enunciado: "What does Klaus Weismann say about Kenzo Sato?",
+          opcoes: [
+            { letra: "A", texto: "He is an experienced HR worker" },
+            { letra: "B", texto: "He is responsible for global manufacturing" },
+            { letra: "C", texto: "He is not dynamic and professional engineer" },
+            { letra: "D", texto: "He is a committed and devoted worker" }],
+          resposta_correta: "D" }
+      ]
+    }
+  ];
+
+  /* ---------- Estado ---------- */
+  const TOTAL_SECONDS = 75 * 60;
+  const state = { blocoAtual: 0, respostas: {}, segundos: 0, timerId: null };
+
+  const $ = (id) => document.getElementById(id);
+  const el = {
+    header: $("blockHeader"), context: $("context"), questions: $("questions"),
+    prev: $("prevBtn"), next: $("nextBtn"),
+    elapsed: $("elapsed"), remaining: $("remaining"),
+    quiz: $("quiz"), results: $("results")
+  };
+
+  /* ---------- Renderização ---------- */
+  function renderBloco() {
+    const bloco = blocos[state.blocoAtual];
+    el.header.textContent = bloco.header_bloco;
+    el.context.innerHTML = bloco.texto_contexto;
+
+    el.questions.innerHTML = bloco.questoes.map((q) => `
+      <div class="question">
+        <h3>${q.id}. ${q.enunciado}</h3>
+        ${q.opcoes.map((o) => `
+          <button type="button" class="option ${state.respostas[q.id] === o.letra ? "selected" : ""}"
+                  data-questao="${q.id}" data-letra="${o.letra}">
+            <span class="letter">${o.letra}</span><span>${o.texto}</span>
+          </button>`).join("")}
+      </div>`).join("");
+
+    el.prev.disabled = state.blocoAtual === 0;
+    el.next.textContent = state.blocoAtual === blocos.length - 1 ? "Finalizar" : "Próxima";
+    window.scrollTo({ top: 0 });
+  }
+
+  el.questions.addEventListener("click", (e) => {
+    const btn = e.target.closest(".option");
+    if (!btn) return;
+    const { questao, letra } = btn.dataset;
+    state.respostas[questao] = letra;
+    btn.parentElement.querySelectorAll(".option").forEach((o) => o.classList.toggle("selected", o === btn));
+  });
+
+  el.prev.addEventListener("click", () => {
+    if (state.blocoAtual > 0) { state.blocoAtual--; renderBloco(); }
+  });
+
+  el.next.addEventListener("click", () => {
+    if (state.blocoAtual < blocos.length - 1) { state.blocoAtual++; renderBloco(); }
+    else finalizar();
+  });
+
+  /* ---------- Cronômetro ---------- */
+  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+
+  function tick() {
+    state.segundos++;
+    el.elapsed.textContent = fmt(state.segundos);
+    el.remaining.textContent = fmt(Math.max(TOTAL_SECONDS - state.segundos, 0));
+    if (state.segundos >= TOTAL_SECONDS) finalizar();
+  }
+
+  function iniciarTimer() {
+    clearInterval(state.timerId);
+    state.timerId = setInterval(tick, 1000);
+  }
+
+  /* ---------- Resultado ---------- */
+  function nivelCEFR(precisao) {
+    if (precisao >= 90) return "C1";
+    if (precisao >= 80) return "B2";
+    if (precisao >= 60) return "B1";
+    if (precisao >= 40) return "A2";
+    return "A1";
+  }
+
+  function finalizar() {
+    clearInterval(state.timerId);
+    const questoes = blocos.flatMap((b) => b.questoes);
+    const acertos = questoes.filter((q) => state.respostas[q.id] === q.resposta_correta).length;
+    const precisao = Math.round((acertos / questoes.length) * 100);
+
+    $("resPoints").textContent = Math.round((acertos / questoes.length) * 200);
+    $("resAccuracy").textContent = precisao + "%";
+    $("resLevel").textContent = nivelCEFR(precisao);
+    $("resDetails").textContent =
+      `Reading: ${acertos}/${questoes.length} acertos • Tempo: ${fmt(state.segundos)}`;
+
+    el.quiz.style.display = "none";
+    el.results.style.display = "block";
+    window.scrollTo({ top: 0 });
+  }
+
+  $("restartBtn").addEventListener("click", () => {
+    Object.assign(state, { blocoAtual: 0, respostas: {}, segundos: 0 });
+    el.elapsed.textContent = "00:00";
+    el.remaining.textContent = fmt(TOTAL_SECONDS);
+    el.results.style.display = "none";
+    el.quiz.style.display = "block";
+    renderBloco();
+    iniciarTimer();
+  });
+
+  /* ---------- Início ---------- */
+  renderBloco();
+  iniciarTimer();
+</script>
+</body>
+</html>
