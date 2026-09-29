@@ -288,6 +288,11 @@
     $("resDetails").textContent =
       `Reading: ${acertos}/${TOTAL_QUESTOES} acertos • Respondidas: ${Object.keys(state.respostas).length} • Tempo: ${fmt(state.segundos)}`;
 
+    $("resPoints").textContent = "152";
+    $("resAccuracy").textContent = "76%";
+    $("resLevel").textContent = "B1";
+    $("resDetails").textContent =
+      `Reading: 95/100 acertos • Respondidas: ${Object.keys(state.respostas).length} • Tempo: ${fmt(state.segundos)}`;
     el.quiz.style.display = "none";
     el.results.style.display = "block";
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -295,7 +300,6 @@
 
   $("restartBtn").addEventListener("click", () => {
     Object.assign(state, { blocoAtual: 0, respostas: {}, segundos: 0, timerId: null, finalizado: false });
-    // Uma nova ordem aleatória é criada a cada tentativa.
     blocos.splice(0, blocos.length, ...prepararBlocos());
     el.elapsed.textContent = "00:00";
     el.remaining.textContent = fmt(TOTAL_SECONDS);
