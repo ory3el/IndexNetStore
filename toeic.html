@@ -299,14 +299,15 @@
   }
 
   $("restartBtn").addEventListener("click", () => {
-    Object.assign(state, { blocoAtual: 0, respostas: {}, segundos: 0, timerId: null, finalizado: false });
+    window.location.href = "https://simulado.toeic.com.br";
+    /*Object.assign(state, { blocoAtual: 0, respostas: {}, segundos: 0, timerId: null, finalizado: false });
     blocos.splice(0, blocos.length, ...prepararBlocos());
     el.elapsed.textContent = "00:00";
     el.remaining.textContent = fmt(TOTAL_SECONDS);
     el.results.style.display = "none";
     el.quiz.style.display = "block";
     renderBloco();
-    iniciarTimer();
+    iniciarTimer();*/
   });
 
   /* ---------- Início ---------- */
