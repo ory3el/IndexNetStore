@@ -22,7 +22,7 @@ footer{display:flex;justify-content:space-between;margin-top:8px}.btn{padding:8p
 </head>
 <body>
 <header>
-  <div class="brand"><div class="logo">*toeic.<small>®</small></div><div class="title">Teste TOEIC <span>(Listening &amp; Reading)</span></div></div>
+  <div class="brand"><div class="logo">*toeic.<small> ®</small></div><div class="title">Teste TOEIC <span>(Listening &amp; Reading)</span></div></div>
   <div class="timers">
     <div class="timer"><label>Seção</label><strong id="sectionName">Listening</strong></div>
     <div class="timer"><label>Tempo restante</label><strong id="remaining">45:00</strong></div>
@@ -320,7 +320,7 @@ function switchToReading(auto=false) {
   speechSynthesis.cancel();
   state.section='reading'; state.groupIndex=0; state.groups=buildReadingGroups(); state.sectionElapsed=0; state.audioPlaying=false;
   el.sectionName.textContent='Reading'; el.remaining.textContent=fmt(READING_SECONDS); render();
-  if(auto) { /* leitura começa automaticamente quando os 45 minutos se esgotam */ }
+  if(auto) { }
 }
 
 function finalize() {
